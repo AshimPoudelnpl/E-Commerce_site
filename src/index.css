@@ -10,9 +10,11 @@
 body{
     font-family: "Google Sans", sans-serif;
     font-optical-sizing: auto;
+    background:#f5f0f0;
+    color: rgba(0, 0, 0, 0.9);
 }
 .container{
-    width:90%;
+    width:95%;
     margin:auto
 }
 header .top-strip{
@@ -33,3 +35,4 @@ header .top-strip{
 .link:hover{
     color:var(--color-primary);
 }
+nav ul button{text-transform: capitalize !important;  }

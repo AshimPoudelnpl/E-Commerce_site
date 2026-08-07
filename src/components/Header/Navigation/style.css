@@ -1,0 +1,31 @@
+.categoryPanel{
+    text-transform: capitalize !important;
+}
+
+/* Hide all submenus by default, take them out of flow */
+.submenu {
+  display: none;
+  position: absolute;
+  z-index: 50;
+}
+
+/* Top-level: show Fashion's submenu on hover of its <li> */
+li.relative:hover > .submenu {
+  display: block;
+}
+
+/* Give every item inside a submenu its own positioning context */
+.submenu li {
+  position: relative;
+}
+
+/* Nested submenu flies out to the right of its parent item */
+.submenu li > .submenu {
+  top: 0 !important;
+  left: 100% !important;
+}
+
+/* Show nested submenu only when hovering its specific parent <li> */
+.submenu li:hover > .submenu {
+  display: block;
+}

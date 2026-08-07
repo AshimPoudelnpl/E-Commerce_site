@@ -8,11 +8,12 @@ import Tooltip from "@mui/material/Tooltip";
 import { MdShoppingCartCheckout } from "react-icons/md";
 import { IoIosGitCompare } from "react-icons/io";
 import { TiHeartOutline } from "react-icons/ti";
+import Navigation from "../Header/Navigation";
 
 function Header() {
   return (
-    <header>
-      <div className="top-strip py-2 border-t-[1px] border-gray-300 border-b-[1px]">
+    <header className="bg-white">
+      <div className="top-strip py-2 border-t-[1px] border-gray-300 border-b-[1px]  ">
         <div className="container">
           <div className="flex items-center justify-between">
             <div className="col1 w-[50%]">
@@ -108,6 +109,7 @@ function Header() {
           </div>
         </div>
       </div>
+      <Navigation />
     </header>
   );
 }
