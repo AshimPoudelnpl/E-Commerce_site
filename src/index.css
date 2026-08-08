@@ -36,3 +36,9 @@ header .top-strip{
     color:var(--color-primary);
 }
 nav ul button{text-transform: capitalize !important;  }
+
+.adsBannerSwiper .swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+

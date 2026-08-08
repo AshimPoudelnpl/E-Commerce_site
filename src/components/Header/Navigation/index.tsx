@@ -190,11 +190,10 @@ function Navigation(): React.JSX.Element {
               </li>
             </ul>
           </div>
-          <div className="col_3 w-[15%]">
-            <p className="font-[500] text-[14px] flex items-center gap-3 mb-0 mt-0">
-              <GoRocket className="text-[18px]" />
+          <div className="col_3 w-fit flex-shrink-0 flex items-center gap-3 whitespace-nowrap">
+            <p className="font-[300] text-[14px] flex items-center gap-3 mb-0 mt-0"/>
+              <GoRocket className="text-[18px] " />
               Free International Delievery
-            </p>
           </div>
         </div>
       </nav>

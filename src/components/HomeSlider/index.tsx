@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar } from "swiper/modules";
+import { Navigation, Pagination, Scrollbar, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,11 +13,31 @@ import "./style.css";
 
 function HomeSlider() {
   return (
-    <Swiper navigation={true} modules={[Navigation]} className="mySwiper w-full">
-      <SwiperSlide><img src={slide1} alt="Slide 1" /></SwiperSlide>
-      <SwiperSlide><img src={slide2} alt="Slide 2" /></SwiperSlide>
-      <SwiperSlide><img src={slide3} alt="Slide 3" /></SwiperSlide>
-      
+    <Swiper
+      navigation={true}
+      autoplay={{
+        delay: 3000,
+        disableOnInteraction: false,
+      }}
+      loop={true}
+      modules={[Navigation, Autoplay]}
+      className="homeSwiper"
+    >
+      <SwiperSlide>
+        <div className="item rounded-[20px] overflow-hidden">
+          <img src={slide1} alt="Slide 1" />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div className="item rounded-[20px] overflow-hidden">
+          <img src={slide2} alt="Slide 2" />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div className="item rounded-[20px] overflow-hidden">
+          <img src={slide3} alt="Slide 3" />
+        </div>
+      </SwiperSlide>
     </Swiper>
   );
 }
