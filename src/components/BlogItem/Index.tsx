@@ -1,7 +1,5 @@
-import React from "react";
 import blogImg from "../../assets/BAnner4_files/Banner_image Slider/1783056671047_blog-2-3.jpg";
 import { IoIosArrowForward, IoMdTime } from "react-icons/io";
-import { FaArrowRight } from "react-icons/fa";
 
 interface BlogItemProps {
   image?: string;
