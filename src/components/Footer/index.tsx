@@ -10,8 +10,8 @@ import {
   LiaYoutube,
   LiaPinterest,
   LiaInstagram,
-  LiaAngleDoubleUp,
 } from "react-icons/lia";
+import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { IoChatboxOutline } from "react-icons/io5";
 import {
   FaCcVisa,
@@ -246,7 +246,7 @@ function Footer() {
           className="fixed bottom-6 right-6 w-12 h-12 flex items-center justify-center rounded-md bg-primary text-white shadow-lg hover:bg-red-600 transition-all duration-300 z-50"
           aria-label="Scroll to top"
         >
-          <LiaAngleDoubleUp className="text-[22px]" />
+          <MdKeyboardDoubleArrowUp className="text-[22px]" />
         </button>
       )}
     </>

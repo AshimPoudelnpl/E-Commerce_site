@@ -1,4 +1,3 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -33,7 +32,7 @@ function HomeCatSlider() {
             768: { slidesPerView: 5 },
             1024: { slidesPerView: 7 },
           }}
-          className="mySwiper !items-start !h-auto"
+          className="catSwiper !items-start !h-auto"
         >
           {categories.map((cat, index) => (
             <SwiperSlide key={index} className="!h-auto">

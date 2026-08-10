@@ -1,0 +1,5 @@
+.sidebar .scroll{max-height: 100vh; overflow-y: auto; overflow-x: hidden;}
+    .ReactCollapse--collapse {
+    transition: height 500ms;
+    }
+    

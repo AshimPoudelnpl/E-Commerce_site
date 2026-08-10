@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import HomeSlider from "../components/HomeSlider";
+import HomeBanner from "../HomeBanner";
 import HomeCatSlider from "../components/HomeCatSlider";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import AdsBannerSlider from "../components/AdsBannerSlider";
@@ -74,7 +74,6 @@ import blog2 from "../assets/BAnner4_files/Banner_image Slider/1783056681537_blo
 import blog3 from "../assets/BAnner4_files/Banner_image Slider/1783056695345_blog-2-1.jpg";
 import blog4 from "../assets/BAnner4_files/Banner_image Slider/1783056704340_blog-2-6.jpg";
 import blog5 from "../assets/BAnner4_files/Banner_image Slider/1783066403324_1737036773579_sample-1.jpg";
-import Footer from "../components/Footer";
 
 const tabProducts: Record<number, Product[]> = {
   0: [
@@ -181,7 +180,7 @@ function Home() {
 
   return (
     <>
-      <HomeSlider />
+      <HomeBanner />
       <HomeCatSlider />
 
       {/* Popular Products */}
@@ -291,7 +290,6 @@ function Home() {
           </Swiper>
         </div>
       </section>
-      <Footer/>
     </>
   );
 }
