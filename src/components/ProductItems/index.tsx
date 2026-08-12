@@ -5,6 +5,8 @@ import { MdZoomOutMap } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { FaCartShopping } from "react-icons/fa6";
+import { useContext } from "react";
+import { MyContext } from "../../App";
 
 interface ProductItemsProps {
   id?: number;
@@ -32,6 +34,8 @@ function ProductItems({
   view = "grid",
 }: ProductItemsProps) {
   const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+
+  const context= useContext(MyContext);
 
   if (view === "list") {
     return (
@@ -107,8 +111,8 @@ function ProductItems({
         <div className="actions absolute top-[15px] right-[5px] z-50 flex items-center gap-2 flex-col w-[50px]">
           <Button
             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-[#ff6347] hover:!text-white !shadow-md"
-            onClick={(e) => e.preventDefault()}
-          >
+            onClick={()=>context.setOpenProductDetailsModal(true)}
+          > 
             <MdZoomOutMap className="text-[18px]" />
           </Button>
           <Button

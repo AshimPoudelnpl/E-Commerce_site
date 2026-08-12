@@ -49,7 +49,6 @@ function ProductZoom() {
             zoomSrc={activeImg}
             zoomType="hover"
             zoomScale={1}
-            alt="Product"
           />
         </div>
       </div>

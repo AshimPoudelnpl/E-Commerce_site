@@ -16,13 +16,13 @@ function Sidebar() {
   const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
   const [isOpenRatingFilter, setIsOpenRatingFilter] = useState(true);
 
-  const [priceRange, setPriceRange] = useState([100, 1000]);
+  const [priceRange, setPriceRange] = useState<number[]>([100, 1000]);
 
-  const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
+  const handlePriceChange = (_event: any, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
   };
 
-  const [selectedRating, setSelectedRating] = useState(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
 
   return (
     <aside className="sidebar py-5">

@@ -7,6 +7,9 @@ import QtyBox from "../components/QtyBox";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoGitCompareOutline } from "react-icons/io5";
+import { TextField } from "@mui/material";
+import ProductSlider from "../components/ProductSlider";
+import ProductDetails1 from "../components/ProductDetails";
 
 function ProductDetails() {
   const [activeTab, setActiveTab] = useState(0);
@@ -28,58 +31,7 @@ function ProductDetails() {
             <ProductZoom />
           </div>
 
-          <div className="w-[70%]">
-            <h1 className="text-2xl font-semibold mb-1">Rounded Neck Tshirt</h1>
-
-            <p className="text-gray-500 text-sm mb-3">
-              Brands : <b>EagleBird</b> &nbsp; ★★★★☆ &nbsp; Review (5)
-            </p>
-
-            <p className="mb-3">
-              <span className="line-through text-gray-400 mr-2">Rs 58.00</span>
-              <span className="text-red-500 font-semibold mr-2">Rs 58.00</span>
-              Available In Stock: <b className="text-green-600">147 Items</b>
-            </p>
-
-            <p className="text-gray-600 text-sm mb-5">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged.
-            </p>
-
-            <div className="flex items-center gap-2 mb-5">
-              <span>Size:</span>
-              {["S", "M", "L", "XL"].map((size) => (
-                <button key={size} className="border rounded px-3 py-1 text-sm">
-                  {size}
-                </button>
-              ))}
-            </div>
-
-            <p className="text-sm text-gray-600 mb-4">
-              Free Shipping (Est. Delivery Time 2-3 Days)
-            </p>
-
-            <div className="flex items-center gap-4">
-              <QtyBox />
-              <button className="bg-[#f0574c] text-white px-6 py-3 rounded font-medium flex ">
-                <MdOutlineShoppingCart className="flex items-center mx-2" />
-                ADD TO CART
-              </button>
-            </div>
-            <div className="flex items-center gap-4 mt-4">
-              <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
-                <FaRegHeart className="text-[]" /> Add to Wishlist
-              </span>
-
-              <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
-                <IoGitCompareOutline /> Add to Compare
-              </span>
-            </div>
-          </div>
+          <ProductDetails1 />
         </div>
         <div className="container pt-10">
           <div className="flex items-center gap-8 pb-3 mb-5">
@@ -444,14 +396,26 @@ function ProductDetails() {
                   </div>
                 </div>
               </div>
-
+              <form className="w-full">
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="Write a review ... "
+                  className="w-full"
+                  multiline
+                  maxRows={4}
+                />
+              </form>
               <div className="mt-6 pt-6 border-t">
                 <button className="bg-[#f0574c] text-white px-6 py-2 rounded font-medium hover:bg-[#d9483d] transition-colors">
-                  Write a Review
+                  Add Review
                 </button>
               </div>
             </div>
           )}
+          <div className="container">
+            <h2 className="text-[20px] font-[600] py-6">Related Products</h2>
+            <ProductSlider items={6} />
+          </div>
         </div>
       </section>
     </>
