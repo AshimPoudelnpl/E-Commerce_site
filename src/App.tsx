@@ -2,6 +2,7 @@ import React, { createContext, useState } from "react";
 import Header from "./components/Header/Index";
 import Footer from "./components/Footer/index";
 import { Route, Routes } from "react-router-dom"; // Removed BrowserRouter import
+import productImage from "./assets/578c27b4ff2171e9c60dfafbe9a04616.jpg"
 
 import Home from "./pages/Home";
 import Productlisting from "./pages/Productlisting";
@@ -17,30 +18,48 @@ import { IoCloseSharp } from "react-icons/io5";
 import ProductDetails1 from "./components/ProductDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Drawer } from "@mui/material";
+import CartPanel from "./components/cartPanel";
+import Cart from "./pages/Cart";
+import Verify from "./components/verify";
+import ForgotPassword from "./pages/Forgot-passwprd";
+import toast, { Toaster } from "react-hot-toast";
 
-const MyContext = createContext<any>({});
+export const MyContext = createContext<any>({});
 
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] =
     React.useState(false);
   const [maxWidth, setMaxWidth] = React.useState<DialogProps["maxWidth"]>("lg");
   const [fullWidth, setFullWidth] = React.useState(true);
-  const [openCartPanel, setCartOpen] = useState(true);
+  const [openCartPanel, setCartOpen] = useState(false);
 
   const handleCloseProductDetailsModal = () => {
     setOpenProductDetailsModal(false);
   };
 
-  const values = {
-    setOpenProductDetailsModal,
-  };
   const toggleCartPannel = (newOpen: boolean) => {
     setCartOpen(newOpen);
+  };
+  const success = (msg: string) => {
+    toast.success(msg);
+  }
+
+  const error = (msg: string) => {
+    toast.error(msg);
+  }
+
+  const values = {
+    setOpenProductDetailsModal,
+    setCartOpen,
+    openCartPanel,
+    toggleCartPannel,
+    success,
+    error
   };
 
   return (
     <>
+    <Toaster />
       <MyContext.Provider value={values}>
         <Header />
         <Routes>
@@ -49,8 +68,12 @@ function App() {
           <Route path="/productDetails/:id" element={<ProductDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-in" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/verify" element={<Verify />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
         <Footer />
+        <CartPanel />
       </MyContext.Provider>
 
       <Dialog
@@ -80,19 +103,8 @@ function App() {
           </div>
         </DialogContent>
       </Dialog>
-      <Drawer
-        open={openCartPanel}
-        onClose={() => toggleCartPannel(false)}
-        anchor="right"
-      >
-        <div className="flex items-center justify-between py-3 px-4 gap-3">
-          <h4>Shopping Cart (1)</h4>
-          <IoCloseSharp className="text-[20px] cursor-pointer" />
-        </div>
-      </Drawer>
     </>
   );
 }
 
 export default App;
-export { MyContext };

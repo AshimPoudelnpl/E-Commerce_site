@@ -8,8 +8,11 @@ import { MdShoppingCartCheckout } from "react-icons/md";
 import { IoIosGitCompare } from "react-icons/io";
 import { TiHeartOutline } from "react-icons/ti";
 import Navigation from "../Header/Navigation";
+import { MyContext } from "../../App";
+import { useContext } from "react";
 
 function Header() {
+  const context = useContext(MyContext);
   return (
     <header className="bg-white">
       <div className="top-strip py-2 border-t-[1px] border-gray-300 border-b-[1px]  ">
@@ -97,7 +100,10 @@ function Header() {
               {/* Cart Icon */}
               <li>
                 <Tooltip title="Cart">
-                  <IconButton aria-label="cart">
+                  <IconButton
+                    aria-label="cart"
+                    onClick={() => context.setCartOpen(true)}
+                  >
                     <Badge badgeContent={4} color="secondary">
                       <MdShoppingCartCheckout />
                     </Badge>
