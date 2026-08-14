@@ -2,6 +2,7 @@ import React from 'react'
 import { BsFillBagCheckFill } from 'react-icons/bs'
 import { Button } from '@mui/material'
 import CartItems from './CartItems'
+import { Link } from 'react-router-dom'
 
 function Cart() {
     return (
@@ -39,9 +40,9 @@ function Cart() {
                             <span className="text-[14px] font-[600]">Total</span>
                             <span className="text-primary font-bold">₹1,300.00</span>
                         </p>
-                        <Button className='btnorg btn-lg w-full !bg-[#ff5252] !text-white rounded-full flex items-center justify-center gap-2'>
+                        <Link to="/checkout" className='btnorg p-2 btn-lg w-full !bg-[#ff5252] !text-white rounded-full flex items-center justify-center gap-2'>
                             <BsFillBagCheckFill className="text-xl" /> Checkout
-                        </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

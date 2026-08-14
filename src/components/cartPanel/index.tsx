@@ -151,13 +151,13 @@ const CartPanel = () => {
             VIEW CART
           </Link>
 
-          <Link
-            to="/cart"
+          <Link   
+            to="/checkout"
             onClick={() => toggleCartPannel(false)}
             className="flex-1 h-[40px] bg-[#ff6347] text-white rounded font-semibold flex items-center justify-center hover:bg-[#e05338] transition-colors"
           >
             CHECKOUT
-          </Link>
+          </Link>   
         </div>
 
       </div>
