@@ -26,6 +26,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Checkout from "./pages/Checkout";
 import Myaccount from "./pages/Myaccount";
 import Mylist from "./pages/Mylist";
+import Order from "./pages/Order";
 
 export const MyContext = createContext<any>({});
 
@@ -80,6 +81,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/my-account" element={<Myaccount />} />
           <Route path="/my-list" element={<Mylist />} />
+          <Route path="/my-orders" element={<Order />} />
         </Routes>
         <Footer />
         <CartPanel />

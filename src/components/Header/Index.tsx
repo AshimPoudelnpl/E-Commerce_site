@@ -174,7 +174,7 @@ function Header() {
 
                       <MenuItem onClick={handleClose} className="p-0">
                         <Link
-                          to="/cart"
+                          to="/my-orders"
                           className="flex items-center gap-2 w-full px-2 py-2"
                         >
                           <IoBagCheckOutline className="text-[18px]" />
@@ -194,7 +194,7 @@ function Header() {
 
                       <MenuItem onClick={handleClose} className="p-0">
                         <Link
-                          to="/login"
+                          to="/logout"
                           className="flex items-center gap-2 w-full px-2 py-2"
                         >
                           <IoIosLogOut className="text-[18px]" />

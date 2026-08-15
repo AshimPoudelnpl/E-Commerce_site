@@ -15,13 +15,13 @@ const AcccountSideaBar = () => {
             icon: <FaRegUser className="text-[16px]" />,
         },
         {
-            label: "My List",
+            label: "List",
             to: "/my-list",
             icon: <IoMdHeartEmpty className="text-[18px]" />,
         },
         {
-            label: "My Orders",
-            to: "/orders",
+            label: "Orders",
+            to: "/my-orders",
             icon: <IoBagCheckOutline className="text-[17px]" />,
         },
     ];
