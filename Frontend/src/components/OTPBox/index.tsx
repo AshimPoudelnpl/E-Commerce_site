@@ -8,7 +8,8 @@ type OTPBoxProps = {
   onChange?: (value: string) => void;
 };
 
-const OTPBox = ({ length, onChange }: OTPBoxProps) => {
+const OTPBox = (props: OTPBoxProps) => {
+  const { length, onChange } = props;
   const [otp, setOtp] = useState<string[]>(() =>
     Array.from({ length }, () => ""),
   );

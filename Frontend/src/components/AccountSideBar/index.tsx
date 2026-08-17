@@ -54,7 +54,9 @@ const AcccountSideaBar = () => {
             accept="image/*"
             className="hidden"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const file = e.target.files?.[0];
+              const files = e.currentTarget.files;
+              const file = files && files.length > 0 ? files[0] : null;
+
               if (file) {
                 console.log(file);
               }

@@ -9,7 +9,7 @@ import { IoIosGitCompare, IoIosLogOut, IoMdHeartEmpty } from "react-icons/io";
 import { TiHeartOutline } from "react-icons/ti";
 import Navigation from "../Header/Navigation";
 import { MyContext } from "../../App";
-import React, { useContext } from "react";
+import React, { useContext, type MouseEvent } from "react";
 import { Avatar, Divider, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { BsPersonAdd } from "react-icons/bs";
 import { CiSettings } from "react-icons/ci";
@@ -21,7 +21,7 @@ function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
