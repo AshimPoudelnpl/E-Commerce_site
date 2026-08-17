@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import DashBoardBoxes from "../../Components/DashboardBoxes";
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
-  )
-}
+    <>
+      <DashBoardBoxes />
+    </>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

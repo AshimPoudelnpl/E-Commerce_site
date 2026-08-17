@@ -18,10 +18,10 @@ import { FaBoxOpen, FaList, FaRegUser } from "react-icons/fa6";
 import { IoBagCheckOutline } from "react-icons/io5";
 
 function Header() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -116,7 +116,6 @@ function Header() {
                       {context.user?.name || "User"}
                     </span>
 
-
                     <Menu
                       anchorEl={anchorEl}
                       id="account-menu"
@@ -128,8 +127,7 @@ function Header() {
                           elevation: 0,
                           sx: {
                             overflow: "visible",
-                            filter:
-                              "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                             mt: 1.5,
                             "& .MuiAvatar-root": {
                               width: 32,
@@ -146,8 +144,7 @@ function Header() {
                               width: 10,
                               height: 10,
                               bgcolor: "background.paper",
-                              transform:
-                                "translateY(-50%) rotate(45deg)",
+                              transform: "translateY(-50%) rotate(45deg)",
                               zIndex: 0,
                             },
                           },

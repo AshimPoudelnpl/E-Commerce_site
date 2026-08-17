@@ -1,2 +1,41 @@
-body{font-family: "Raleway", serif;}
+body{font-family: "Raleway", serif; background: #f1f1f1;}
 .MuiBadge-badge {background:red !important;}
+
+/* Swiper navigation styling for dashboard boxes */
+.dashboardBoxesSlider{ position: relative; }
+.dashboardBoxesSlider .swiper-button-prev,
+.dashboardBoxesSlider .swiper-button-next{
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 30 !important;
+  color: #374151 !important; /* gray-700 */
+  background: rgba(255,255,255,0.95) !important;
+  border-radius: 9999px !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+  left: auto !important;
+  right: auto !important;
+}
+/* place prev on left, next on right explicitly */
+.dashboardBoxesSlider .swiper-button-prev{ left: 8px !important; right: auto !important; }
+.dashboardBoxesSlider .swiper-button-next{ right: 8px !important; left: auto !important; }
+
+/* In some setups Swiper injects transforms; make sure left/right positioning takes precedence */
+.dashboardBoxesSlider .swiper-button-prev::after,
+.dashboardBoxesSlider .swiper-button-next::after{
+  font-size: 16px !important;
+}
+
+
+/* Ensure buttons are visible on small screens */
+@media (max-width: 640px){
+  .dashboardBoxesSlider .swiper-button-prev,
+  .dashboardBoxesSlider .swiper-button-next{ width:32px !important; height:32px !important; }
+}
+.btn-blue{background:#3872fa !important ; color:#fff !important}
+.btn-blue:hover {background :#3067e5;}

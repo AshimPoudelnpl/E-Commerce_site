@@ -1,101 +1,112 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/logo.jpg";
 
 import {
-  HiOutlineViewGrid,
-  HiOutlinePhotograph,
-  HiOutlineUsers,
-  HiOutlineShoppingBag,
-  HiOutlineCollection,
-  HiOutlineClipboardList,
-  HiOutlineLogout,
-  HiOutlineChevronDown,
-} from "react-icons/hi";
+  MdDashboard,
+  MdImage,
+  MdPeople,
+  MdShoppingBag,
+  MdCategory,
+  MdReceiptLong,
+  MdLogout,
+} from "react-icons/md";
+
+import { IoChevronDown } from "react-icons/io5";
+import { MyContext } from "../../App";
 
 const Sidebar = () => {
+  const { isSideBarOpen } = useContext(MyContext);
+
   return (
-    <aside className="fixed top-0 left-0 z-40 h-screen w-[18%] border-r border-gray-200 bg-white px-4 py-3">
+    <aside
+      className={`fixed top-0 left-0 z-40 h-screen w-[18%] border-r border-gray-200 bg-white transition-all duration-300 ${
+        isSideBarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       {/* Logo */}
-      <div className="mb-6 flex w-full items-center px-2">
-        <Link to="/">
-          <img src="/logo.jpg" alt="Ecme" className="w-[120px]" />
-        </Link>
+      <div className="flex h-[70px] items-center border-b border-gray-200 px-6">
+        <img src={logo} alt="Ecme" className="w-[120px]" />
       </div>
 
       {/* Menu */}
-      <nav className="w-full">
+      <div className="px-3 py-5">
+        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+          Main Menu
+        </p>
+
         {/* Dashboard */}
         <Link
           to="/"
-          className="mb-1 flex h-[45px] items-center gap-4 rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-600"
         >
-          <HiOutlineViewGrid className="text-[21px] font-bold text-gray-600" />
-          <span className="font-bold">Dashboard</span>
+          <MdDashboard className="text-xl" />
+          <span>Dashboard</span>
         </Link>
 
         {/* Home Slides */}
         <Link
           to="/home-slides"
-          className="mb-1 flex h-[45px] items-center justify-between rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
         >
-          <div className="flex items-center gap-4">
-            <HiOutlinePhotograph className="text-[21px] text-gray-600" />
-            <span  className="font-bold">Home Slides</span>
-          </div>
+          <span className="flex items-center gap-3">
+            <MdImage className="text-xl text-gray-500" />
+            <span>Home Slides</span>
+          </span>
 
-          <HiOutlineChevronDown className="text-[16px] text-gray-600" />
+          <IoChevronDown className="text-gray-500" />
         </Link>
 
         {/* Users */}
         <Link
           to="/users"
-          className="mb-1 flex h-[45px] items-center gap-4 rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
         >
-          <HiOutlineUsers className="text-[21px] text-gray-600" />
-          <span  className="font-bold">Users</span>
+          <MdPeople className="text-xl text-gray-500" />
+          <span>Users</span>
         </Link>
 
         {/* Products */}
         <Link
           to="/products"
-          className="mb-1 flex h-[45px] items-center justify-between rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
         >
-          <div className="flex items-center gap-4">
-            <HiOutlineShoppingBag className="text-[21px] text-gray-600" />
-            <span className="font-bold">Products</span>
-          </div>
+          <span className="flex items-center gap-3">
+            <MdShoppingBag className="text-xl text-gray-500" />
+            <span>Products</span>
+          </span>
 
-          <HiOutlineChevronDown className="text-[16px] text-gray-600" />
+          <IoChevronDown className="text-gray-500" />
         </Link>
 
         {/* Category */}
         <Link
           to="/category"
-          className="mb-1 flex h-[45px] items-center justify-between rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
         >
-          <div className="flex items-center gap-4">
-            <HiOutlineCollection className="text-[21px] text-gray-600" />
-            <span className="font-bold">Category</span>
-          </div>
+          <span className="flex items-center gap-3">
+            <MdCategory className="text-xl text-gray-500" />
+            <span>Category</span>
+          </span>
 
-          <HiOutlineChevronDown className="text-[16px] text-gray-600" />
+          <IoChevronDown className="text-gray-500" />
         </Link>
 
         {/* Orders */}
         <Link
           to="/orders"
-          className="mb-1 flex h-[45px] items-center gap-4 rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+          className="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
         >
-          <HiOutlineClipboardList className="text-[21px] text-gray-600" />
-          <span  className="font-bold">Orders</span>
+          <MdReceiptLong className="text-xl text-gray-500" />
+          <span>Orders</span>
         </Link>
 
         {/* Logout */}
-        <button className="flex h-[45px] w-full items-center gap-4 rounded-md px-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100">
-          <HiOutlineLogout className="text-[21px] text-gray-600" />
-          <span className="font-bold">Logout</span>
+        <button className="mt-5 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-50">
+          <MdLogout className="text-xl" />
+          <span>Logout</span>
         </button>
-      </nav>
+      </div>
     </aside>
   );
 };
