@@ -543,7 +543,7 @@ const DashBoardBoxes = () => {
             <Pagination
               count={totalPages}
               page={currentPage}
-              onChange={(event, value) => setCurrentPage(value)}
+              onChange={(_, value) => setCurrentPage(value)}
               color="primary"
               size="medium"
             />

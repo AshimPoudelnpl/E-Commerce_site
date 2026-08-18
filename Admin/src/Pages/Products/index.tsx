@@ -17,6 +17,8 @@ import { FaPlus } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { FaRegEye, FaTrash } from "react-icons/fa";
 import tShirtImage from "../../assets/4284_plain_t-shirt_2048x2048_85d.webp";
+import SearchBar from "../../Components/SearchBox";
+import { Link } from "react-router-dom";
 
 type Product = {
   id: string;
@@ -90,6 +92,7 @@ const Products = () => {
   const [page, setPage] = useState(0); // zero-based, matches MUI TablePagination
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleProductSelect = (id: string) => {
     setSelectedProducts((prev) =>
@@ -137,10 +140,16 @@ const Products = () => {
     new Set(mockProducts.map((p) => p.subCategory)),
   );
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? mockProducts
-      : mockProducts.filter((p) => p.subCategory === selectedCategory);
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesCategory =
+      selectedCategory === "All" || product.subCategory === selectedCategory;
+    const matchesSearch =
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.subCategory.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
 
   const startIndex = page * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -170,9 +179,11 @@ const Products = () => {
             >
               Export
             </Button>
+            <Link to={'/products/upload'}>
             <Button className="!bg-[#3872fa] !capitalize !text-white !px-5 !py-2 !rounded-md hover:!bg-[#2d5fd6]">
               <FaPlus className="mr-1 text-[13px]" /> Add Product
             </Button>
+            </Link>
           </div>
         </div>
 
@@ -181,20 +192,30 @@ const Products = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Category By
           </label>
-          <FormControl size="small" className="!w-[200px]">
-            <Select
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              className="!bg-white"
-            >
-              <MenuItem value="All">All</MenuItem>
-              {subCategoryOptions.map((sub) => (
-                <MenuItem key={sub} value={sub}>
-                  {sub}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <div className="flex justify-between">
+            <FormControl size="small" className=" !w-[200px]">
+              <Select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className="!bg-white"
+              >
+                <MenuItem value="All">All</MenuItem>
+                {subCategoryOptions.map((sub) => (
+                  <MenuItem key={sub} value={sub}>
+                    {sub}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <SearchBar
+              value={searchTerm}
+              onChange={(value) => {
+                setSearchTerm(value);
+                setPage(0);
+              }}
+              placeholder="Search products"
+            />
+          </div>
         </div>
 
         <TableContainer
@@ -360,3 +381,4 @@ const Products = () => {
 };
 
 export default Products;
+``;

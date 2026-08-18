@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   IconButton,
   InputAdornment,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,6 +15,7 @@ import { FaFacebook } from "react-icons/fa";
 import { HiOutlineLogin } from "react-icons/hi";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -51,12 +51,15 @@ const Login = () => {
         </Box>
 
         <Box className="flex items-center gap-6">
-          <Button
-            startIcon={<HiOutlineLogin className="!text-[16px]" />}
-            className="!bg-gray-100 !text-gray-800 !capitalize !rounded-full !px-5 !py-1.5 !text-[13px] !font-semibold hover:!bg-gray-200"
-          >
-            Login
-          </Button>
+          <Link to="/login">
+            <Button
+              startIcon={<HiOutlineLogin className="!text-[16px]" />}
+              className="!bg-gray-100 !text-gray-800 !capitalize !rounded-full !px-5 !py-1.5 !text-[13px] !font-semibold hover:!bg-gray-200"
+            >
+              Login
+            </Button>
+          </Link>
+
           <Box className="flex items-center gap-1.5 text-gray-800 cursor-pointer">
             <HiOutlineUser className="text-[16px]" />
             <Typography className="!text-[13px] !font-semibold">
@@ -185,8 +188,7 @@ const Login = () => {
               }
             />
             <Link
-              href="#"
-              underline="hover"
+              to="/forgot-password"
               className="!text-[13px] !font-medium !text-blue-600"
             >
               Forgot Password?

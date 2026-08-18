@@ -1,4 +1,3 @@
-import React from "react";
 import DashBoardBoxes from "../../Components/DashboardBoxes";
 
 const Dashboard = () => {

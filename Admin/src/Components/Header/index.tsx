@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { MdMenu, MdNotificationsNone } from "react-icons/md";
 import { MyContext } from "../../App";
 
