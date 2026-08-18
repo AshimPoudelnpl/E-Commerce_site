@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import ConnectDB from "./Config/connectDb.js";
+import userRouter from "./route/user.route.js";
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
     message: "Server is Running " + process.env.PORT,
   });
 });
+app.use("/api/user",userRouter)
 
 ConnectDB().then(() => {
   app.listen(process.env.PORT, () => {

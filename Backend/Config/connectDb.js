@@ -8,7 +8,7 @@ if (!process.env.MONGODB_URI) {
 async function ConnectDB() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connect Db");
+    console.log("Connect to the Database");
   } catch (error) {
     console.log(error);
 
