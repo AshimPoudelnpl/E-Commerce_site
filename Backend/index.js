@@ -9,7 +9,12 @@ import ConnectDB from "./Config/connectDb.js";
 import userRouter from "./route/user.route.js";
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.FRONTEND_URL || true,
+  }),
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,7 +30,7 @@ app.get("/", (req, res) => {
     message: "Server is Running " + process.env.PORT,
   });
 });
-app.use("/api/user",userRouter)
+app.use("/api/user", userRouter);
 
 ConnectDB().then(() => {
   app.listen(process.env.PORT, () => {
