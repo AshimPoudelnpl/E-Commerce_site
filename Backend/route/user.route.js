@@ -7,6 +7,7 @@ import {
   refreshTokenController,
   userDetailsController,
   useAvatorController,
+  removeImageFromCloudinary,
 } from "../controllers/user.controller.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
@@ -27,6 +28,11 @@ userRouter.put(
   auth,
   upload.single("avatar"),
   useAvatorController,
+);
+userRouter.delete(
+  "/deleteImage",
+  auth,
+  removeImageFromCloudinary,
 );
 
 export default userRouter;

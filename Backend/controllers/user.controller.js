@@ -7,11 +7,14 @@ import generateAccessToken from "../utils/generateAcessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
 });
 
 // Register User Controller
@@ -329,6 +332,7 @@ export async function userDetailsController(req, res) {
     });
   }
 }
+
 // Image / Avatar Upload Controller
 export async function useAvatorController(req, res) {
   try {
@@ -389,5 +393,78 @@ export async function useAvatorController(req, res) {
       message: "Error uploading avatar",
       error: error.message,
     });
+  }
+}
+
+// Remove Image From Cloudinary Controller
+export async function removeImageFromCloudinary(req, res) {
+  try {
+    const imgUrl =
+      req.query?.imgUrl 
+
+    if (!imgUrl) {
+      return res.status(400).json({
+        success: false,
+        message: "Image URL is required (provide via ?imgUrl=... or ?img=...)",
+      });
+    }
+
+    // Extract public_id safely
+    let publicId = "";
+    if (imgUrl.includes("/upload/")) {
+      const pathAfterUpload = imgUrl.split("/upload/")[1];
+      const withoutVersion = pathAfterUpload.replace(/^v\d+\//, "");
+      publicId = withoutVersion.substring(0, withoutVersion.lastIndexOf("."));
+    } else {
+      publicId = imgUrl;
+    }
+
+    if (!publicId) {
+      return res.status(400).json({
+        success: false,
+        message: "Could not extract public ID from image URL",
+      });
+    }
+
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    // If user is authenticated and avatar matches this image, clear avatar in DB
+    if (req.userId) {
+      await UserModel.findOneAndUpdate(
+        { _id: req.userId, avatar: imgUrl },
+        { avatar: "" },
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Image deleted successfully from Cloudinary",
+      publicId,
+      result,
+    });
+  } catch (error) {
+    console.error("Remove Image Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Error deleting image from Cloudinary",
+    });
+  }
+}
+
+export async function UpdateUserDetails(req,res){
+  try {
+    const userId = req.userId;
+    const {name,email,mobile,password}=req.body;
+
+    const userExists=await UserModel.findById(userId)
+    if(!userExists){
+      return res.status(404).json({
+        success:false,
+        message:"User cannot updated"
+      })
+    }
+    
+  } catch (error) {
+    
   }
 }
