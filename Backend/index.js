@@ -7,6 +7,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import ConnectDB from "./Config/connectDb.js";
 import userRouter from "./route/user.route.js";
+import categoryRouter from "./route/category.route.js";
+import productRouter from "./route/product.route.js";
 
 const app = express();
 app.use(
@@ -31,6 +33,8 @@ app.get("/", (req, res) => {
   });
 });
 app.use("/api/user", userRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 
 ConnectDB().then(() => {
   app.listen(process.env.PORT, () => {
