@@ -750,3 +750,123 @@ export async function getAllProductsByRating(request, response) {
     });
   }
 }
+export async function geAllProductCount(req, res) {
+  try {
+    const totalProducts = await ProductModel.countDocuments();
+    return res.status(200).json({
+      success: true,
+      totalProducts: totalProducts,
+    });
+  } catch (error) {
+    console.error("Error fetching product count:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching product count",
+      error: error.message,
+    });
+  }
+}
+export async function getALlFeaturedProducts(req, res) {
+  try {
+    const featuredProducts = await ProductModel.find({ isFeatured: true })
+      .populate("category")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: featuredProducts,
+    });
+  } catch (error) {
+    console.error("Error fetching featured products:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching featured products",
+      error: error.message,
+    });
+  }
+}
+export async function deleteproduct(req, res) {
+  try {
+    const productId = req.params.id;
+
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID is required",
+      });
+    }
+
+    const deletedProduct = await ProductModel.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+      data: deletedProduct,
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error deleting product",
+      error: error.message,
+    });
+  }
+}
+export async function getALlFeaturedProductCount(req, res) {
+  try {
+    const featuredProductCount = await ProductModel.countDocuments({
+      isFeatured: true,
+    });
+    return res.status(200).json({
+      success: true,
+      totalFeaturedProducts: featuredProductCount,
+    });
+  } catch (error) {
+    console.error("Error fetching featured product count:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching featured product count",
+      error: error.message,
+    });
+  }
+}
+export async function getProduct(req, res) {
+  try {
+    const productId = req.params.id;
+
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID is required",
+      });
+    }
+
+    const product = await ProductModel.findById(productId).populate("category");
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching product",
+      error: error.message,
+    });
+  }
+}

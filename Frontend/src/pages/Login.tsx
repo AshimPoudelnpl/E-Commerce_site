@@ -15,6 +15,15 @@ const Login = () => {
     password: "",
   });
 
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormFields({ ...formFields, [name]: value });
+  };
+ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  postData("/api/login", formFields);
+}
+
   const context = useContext(MyContext);
 
   const history = useNavigate();
@@ -22,7 +31,7 @@ const Login = () => {
     if (formFields.email == "") {
       context.success("verify your Email");
       setTimeout(() => history("/forgot-password"), 1500);
-    } 
+    }
   };
 
   return (
@@ -41,7 +50,7 @@ const Login = () => {
                 variant="outlined"
                 className="w-full "
                 name="email"
-                onChange={(e) => setFormFields({ ...formFields, email: e.target.value })}
+                onChange={onChangeInput}
               />
             </div>
             <div className="form-group w-full mb-5 relative">
@@ -53,7 +62,8 @@ const Login = () => {
                 className="w-full"
                 name="password"
               />
-              <Button type="submit"
+              <Button
+                type="submit"
                 onClick={() => setIsShowPasssword(!isShowPassword)}
                 className="!absolute top-[10px] right-[10px] z-50 !w-[35px] !h-[35px] !min-w-[35px] !rounded-full !text-black opacity-75"
               >

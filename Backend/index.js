@@ -9,12 +9,16 @@ import ConnectDB from "./Config/connectDb.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/category.route.js";
 import productRouter from "./route/product.route.js";
+import cartRouter from "./route/cart.route.js";
+import myListRouter from "./route/myList.route.js";
 
 const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL || true,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
@@ -35,6 +39,8 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/mylist", myListRouter);
 
 ConnectDB().then(() => {
   app.listen(process.env.PORT, () => {

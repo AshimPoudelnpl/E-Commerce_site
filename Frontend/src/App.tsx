@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 import Header from "./components/Header/Index";
 import Footer from "./components/Footer/index";
 import { Route, Routes } from "react-router-dom"; // Removed BrowserRouter import
-import productImage from "./assets/578c27b4ff2171e9c60dfafbe9a04616.jpg"
+import productImage from "./assets/578c27b4ff2171e9c60dfafbe9a04616.jpg";
 
 import Home from "./pages/Home";
 import Productlisting from "./pages/Productlisting";
@@ -28,6 +28,15 @@ import Myaccount from "./pages/Myaccount";
 import Mylist from "./pages/Mylist";
 import Order from "./pages/Order";
 
+const alertBox = ({ msg, type }: { msg: string; type: string }) => {
+  console.log(type);
+  if (type === "success") {
+    toast.success(msg);
+  } else {
+    toast.error(msg);
+  }
+};
+
 export const MyContext = createContext<any>({});
 
 function App() {
@@ -36,7 +45,8 @@ function App() {
   const [maxWidth, setMaxWidth] = React.useState<DialogProps["maxWidth"]>("lg");
   const [fullWidth, setFullWidth] = React.useState(true);
   const [openCartPanel, setCartOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(true)
+  const [isLogin, setIsLogin] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleCloseProductDetailsModal = () => {
     setOpenProductDetailsModal(false);
@@ -47,11 +57,11 @@ function App() {
   };
   const success = (msg: string) => {
     toast.success(msg);
-  }
+  };
 
   const error = (msg: string) => {
     toast.error(msg);
-  }
+  };
 
   const values = {
     setOpenProductDetailsModal,
@@ -62,11 +72,13 @@ function App() {
     error,
     isLogin,
     setIsLogin,
+    alertBox,
+    apiUrl,
   };
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       <MyContext.Provider value={values}>
         <Header />
         <Routes>

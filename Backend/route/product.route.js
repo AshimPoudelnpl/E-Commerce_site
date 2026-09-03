@@ -14,6 +14,11 @@ import {
   removeProductImage,
   getAllProductByPrice,
   getAllProductsByRating,
+  geAllProductCount,
+  getALlFeaturedProducts,
+  deleteproduct,
+  getALlFeaturedProductCount,
+  getProduct,
 } from "../controllers/product.controller.js";
 
 const productRouter = Router();
@@ -52,6 +57,11 @@ productRouter.get(
 );
 productRouter.get("/getAllProductByPrice", getAllProductByPrice);
 productRouter.get("/getAllProductByRating", getAllProductsByRating);
+productRouter.get("/getAllProductCount", geAllProductCount);
+productRouter.get("/getAllFeaturedProducts", getALlFeaturedProducts);
+productRouter.get("/getAllFeaturedProductCount", getALlFeaturedProductCount);
+productRouter.delete("/deleteProduct/:id", deleteproduct);
+productRouter.get("/:id", getProduct);
 
 // Delete image from Cloudinary
 productRouter.delete("/deleteImage", auth, removeProductImage);
