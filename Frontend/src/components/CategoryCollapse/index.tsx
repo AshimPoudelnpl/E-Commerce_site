@@ -1,83 +1,89 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { FiMinusSquare } from "react-icons/fi";
 import { FaRegSquarePlus } from "react-icons/fa6";
-const items = [
-  ["Electronic", "/electronic"],
-  ["Furniture", "/furniture"],
-  ["Sunglasses", "/sunglasses"],
-  ["Rolling Diamond", "/rolling-diamond"],
-  ["Xbox Controller", "/xbox-controller"],
-  ["Leather Watch", "/leather-watch"],
-  ["Smart Tablet", "/smart-tablet"],
-  ["Purse", "/purse"],
-];
+import { MyContext } from "../../context/MyContext";
+import { initialCategories } from "../../types/category";
 
-function CategoryCollapse() {
+interface CategoryCollapseProps {
+  onCloseDrawer?: () => void;
+}
+
+function CategoryCollapse({ onCloseDrawer }: CategoryCollapseProps) {
+  const context = useContext(MyContext);
+  const categories = context.categories && context.categories.length > 0
+    ? context.categories
+    : initialCategories;
+
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+
+  const toggleCategory = (slug: string) => {
+    setOpenCategory((prev) => (prev === slug ? null : slug));
+  };
+
   return (
-    <div className="scroll">
-      <ul className="w-full">
-        <li className="list-none relative">
-          <div className="flex items-center relative">
-            <Link to="/fashion" className="w-full">
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
-                Fashion
-              </Button>
-            </Link>
-            {openCategory === "fashion" ? (
-              <FiMinusSquare
-                className="absolute top-[10px] right-[15px] cursor-pointer"
-                onClick={() => setOpenCategory(null)}
-              />
-            ) : (
-              <FaRegSquarePlus
-                className="absolute top-[10px] right-[15px] cursor-pointer"
-                onClick={() => setOpenCategory("fashion")}
-              />
-            )}
-          </div>
-          {openCategory === "fashion" && (
-            <ul className="sub-menu w-full pl-3">
-              <li className="list-none">
-                <Link to="/apparel" className="w-full">
-                  <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
-                    Apparel
+    <div className="scroll py-2">
+      <ul className="w-full space-y-1">
+        {categories.map((cat, catIdx) => {
+          const hasSubs = cat.subCategories && cat.subCategories.length > 0;
+          const isOpen = openCategory === cat.slug;
+          const catKey = cat._id || cat.id || cat.slug || `cat-${catIdx}`;
+
+          return (
+            <li key={catKey} className="list-none relative border-b border-gray-100 last:border-b-0">
+              <div className="flex items-center justify-between relative pr-2">
+                <Link
+                  to={`/category/${cat.slug}`}
+                  className="w-full"
+                  onClick={onCloseDrawer}
+                >
+                  <Button className="w-full !text-left !justify-start !px-3 !py-2 !text-gray-800 hover:!text-[#ff5252] !text-sm !font-medium !capitalize">
+                    <span className="mr-2 text-base">{cat.icon || "🏷️"}</span>
+                    {cat.name}
                   </Button>
                 </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/fashion/men" className="w-full">
-                  <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
-                    Men
-                  </Button>
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/fashion/women" className="w-full">
-                  <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
-                    Women
-                  </Button>
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-        {[
-          ["Jewellery", "/jewellery"],
-          ["Watches", "/watches"],
-          ["Outerwear", "/outerwear"],
-          ...items,
-        ].map(([name, path]) => (
-          <li key={path} className="list-none flex items-center relative">
-            <Link to={path} className="w-full">
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
-                {name}
-              </Button>
-            </Link>
-          </li>
-        ))}
+
+                {hasSubs && (
+                  <button
+                    type="button"
+                    onClick={() => toggleCategory(cat.slug)}
+                    className="p-1 text-gray-500 hover:text-black focus:outline-none"
+                    aria-label="Toggle subcategories"
+                  >
+                    {isOpen ? (
+                      <FiMinusSquare className="text-[17px] text-[#ff5252]" />
+                    ) : (
+                      <FaRegSquarePlus className="text-[17px]" />
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {/* Subcategories list */}
+              {hasSubs && isOpen && (
+                <ul className="sub-menu w-full pl-6 bg-gray-50 py-1 space-y-0.5 border-l-2 border-red-200 ml-3">
+                  {cat.subCategories!.map((sub, subIdx) => {
+                    const subKey = sub._id || sub.id || sub.slug || `sub-${subIdx}`;
+                    return (
+                      <li key={subKey} className="list-none">
+                        <Link
+                          to={`/category/${cat.slug}/${sub.slug}`}
+                          className="w-full block"
+                          onClick={onCloseDrawer}
+                        >
+                          <Button className="w-full !text-left !justify-start !px-2 !py-1 !text-xs !text-gray-600 hover:!text-[#ff5252] !capitalize">
+                            • {sub.name}
+                          </Button>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

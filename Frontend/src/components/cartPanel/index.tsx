@@ -3,11 +3,15 @@ import Drawer from "@mui/material/Drawer";
 import { IoCloseSharp } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
 import { MyContext } from "../../context/MyContext";
-import productImage from "../../assets/578c27b4ff2171e9c60dfafbe9a04616.jpg";
 import { Link } from "react-router-dom";
 
 const CartPanel = () => {
-  const { openCartPanel, toggleCartPannel } = useContext(MyContext);
+  const { openCartPanel, toggleCartPannel, cart, removeFromCart } = useContext(MyContext);
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal > 1000 || cart.length === 0 ? 0 : 99;
+  const total = subtotal + shipping;
 
   return (
     <Drawer
@@ -15,161 +19,116 @@ const CartPanel = () => {
       onClose={() => toggleCartPannel(false)}
       anchor="right"
     >
-      <div className="w-[300px] sm:w-[380px] max-w-[100vw] h-screen flex flex-col">
+      <div className="w-[320px] sm:w-[380px] max-w-[100vw] h-screen flex flex-col bg-white">
         {/* Header */}
-        <div className="flex justify-between items-center px-4 py-3 border-b">
-          <h4>Shopping Cart (1)</h4>
-
+        <div className="flex justify-between items-center px-4 py-3.5 border-b border-gray-100 bg-gray-50">
+          <h4 className="font-bold text-gray-900 text-base">
+            Shopping Cart ({totalItems})
+          </h4>
           <IoCloseSharp
-            className="text-[20px] cursor-pointer"
+            className="text-[22px] cursor-pointer text-gray-500 hover:text-black"
             onClick={() => toggleCartPannel(false)}
           />
         </div>
 
-        {/* Product */}
-        <div className="px-4 py-4 border-b flex gap-3">
-          <div className="w-[84px] h-[88px] border rounded">
-            <img
-              src={productImage}
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex-1">
-            <div className="flex justify-between">
+        {/* Product list */}
+        <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
+          {cart.length === 0 ? (
+            <div className="p-8 text-center text-gray-500 flex flex-col items-center justify-center h-full">
+              <span className="text-4xl mb-3">🛒</span>
+              <p className="font-semibold text-gray-700">Your cart is empty</p>
+              <p className="text-xs text-gray-400 mt-1 mb-4">Add products to your cart to checkout</p>
               <Link
-                to="/productDetails/22"
-                className="text-[14px] hover:text-[#ff6347] font-bold"
+                to="/products"
+                onClick={() => toggleCartPannel(false)}
+                className="px-4 py-2 bg-[#ff5252] text-white text-xs font-semibold rounded-md hover:bg-[#e04545]"
               >
-                Mens Cotton Casual Short Sleeve T-Shirts
+                Start Shopping
               </Link>
-
-              <MdDeleteOutline className="text-[20px] cursor-pointer" />
             </div>
+          ) : (
+            cart.map((item) => (
+              <div key={item.id} className="px-4 py-3 flex gap-3 items-center hover:bg-gray-50">
+                <div className="w-[64px] h-[68px] border border-gray-200 rounded-md overflow-hidden flex-shrink-0 bg-gray-50">
+                  <img
+                    src={item.product.img}
+                    alt={item.product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-            <div className="flex justify-between items-center text-[14px] mt-2">
-              <span className="text-gray-500 font-medium">QTY: 1</span>
-              <span className="text-gray-500 font-medium">
-                Price:{" "}
-                <span className="text-[#ff6347] font-semibold">$86.00</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start gap-1">
+                    <Link
+                      to={`/product/${item.productId}`}
+                      onClick={() => toggleCartPannel(false)}
+                      className="text-xs sm:text-sm font-semibold text-gray-800 hover:text-[#ff5252] truncate block"
+                    >
+                      {item.product.name}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-gray-400 hover:text-red-500 p-0.5"
+                    >
+                      <MdDeleteOutline className="text-[18px]" />
+                    </button>
+                  </div>
+
+                  {item.selectedSize && (
+                    <span className="text-[11px] text-gray-400 block">
+                      Size: {item.selectedSize}
+                    </span>
+                  )}
+
+                  <div className="flex justify-between items-center text-xs mt-1.5">
+                    <span className="text-gray-500">Qty: {item.quantity}</span>
+                    <span className="font-bold text-[#ff5252]">
+                      Rs {(item.price * item.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Bottom summary and buttons */}
+        {cart.length > 0 && (
+          <div className="border-t border-gray-200 bg-gray-50 p-4 space-y-2">
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>Subtotal:</span>
+              <span className="font-semibold text-gray-900">Rs {subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>Shipping:</span>
+              <span className="font-semibold text-gray-900">
+                {shipping === 0 ? "Free" : `Rs ${shipping.toFixed(2)}`}
               </span>
             </div>
-          </div>
-        </div>
-        <div className="px-4 py-4 border-b flex gap-3">
-          <div className="w-[84px] h-[88px] border rounded">
-            <img
-              src={productImage}
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-          </div>
+            <div className="flex justify-between text-sm font-bold text-gray-900 pt-2 border-t border-gray-200">
+              <span>Total:</span>
+              <span className="text-[#ff5252]">Rs {total.toFixed(2)}</span>
+            </div>
 
-          <div className="flex-1">
-            <div className="flex justify-between">
+            <div className="flex gap-2 pt-2">
               <Link
-                to="/productDetails/22"
-                className="text-[14px] hover:text-[#ff6347] font-bold"
+                to="/cart"
+                onClick={() => toggleCartPannel(false)}
+                className="flex-1 h-[38px] bg-gray-800 text-white text-xs rounded-md font-semibold flex items-center justify-center hover:bg-black transition-colors"
               >
-                Mens Cotton Casual Short Sleeve T-Shirts
+                VIEW CART
               </Link>
-
-              <MdDeleteOutline className="text-[20px] cursor-pointer" />
-            </div>
-
-            <div className="flex justify-between items-center text-[14px] mt-2">
-              <span className="text-gray-500 font-medium">QTY: 1</span>
-              <span className="text-gray-500 font-medium">
-                Price:{" "}
-                <span className="text-[#ff6347] font-semibold">$86.00</span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="px-4 py-4 border-b flex gap-3">
-          <div className="w-[84px] h-[88px] border rounded">
-            <img
-              src={productImage}
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex-1">
-            <div className="flex justify-between">
               <Link
-                to="/productDetails/22"
-                className="text-[14px] hover:text-[#ff6347] font-bold"
+                to="/checkout"
+                onClick={() => toggleCartPannel(false)}
+                className="flex-1 h-[38px] bg-[#ff5252] text-white text-xs rounded-md font-semibold flex items-center justify-center hover:bg-[#e04545] transition-colors"
               >
-                Mens Cotton Casual Short Sleeve T-Shirts
+                CHECKOUT
               </Link>
-
-              <MdDeleteOutline className="text-[20px] cursor-pointer" />
-            </div>
-
-            <div className="flex justify-between items-center text-[14px] mt-2">
-              <span className="text-gray-500 font-medium">QTY: 1</span>
-              <span className="text-gray-500 font-medium">
-                Price:{" "}
-                <span className="text-[#ff6347] font-semibold">$86.00</span>
-              </span>
             </div>
           </div>
-        </div>
-
-        {/* Push bottom section down */}
-        <div className="flex-1"></div>
-
-        {/* Summary */}
-        <div className="border-t px-4 py-3">
-          <div className="flex justify-between mb-2">
-            <b>1 item</b>
-            <b className="text-[#ff6347]">$86.00</b>
-          </div>
-
-          <div className="flex justify-between">
-            <b>Shipping</b>
-            <b className="text-[#ff6347]">$7.00</b>
-          </div>
-        </div>
-
-        {/* Total */}
-        <div className="border-t px-4 py-3">
-          <div className="flex justify-between mb-2">
-            <b>Total (tax excl.)</b>
-            <b className="text-[#ff6347]">$93.00</b>
-          </div>
-
-          <div className="flex justify-between mb-2">
-            <b>Total (tax incl.)</b>
-            <b className="text-[#ff6347]">$93.00</b>
-          </div>
-
-          <div className="flex justify-between">
-            <b>Taxes:</b>
-            <b className="text-[#ff6347]">$0.00</b>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex gap-3 px-4 py-3 border-t">
-          <Link
-            to="/cart"
-            onClick={() => toggleCartPannel(false)}
-            className="flex-1 h-[40px] bg-[#ff6347] text-white rounded font-semibold flex items-center justify-center hover:bg-[#e05338] transition-colors"
-          >
-            VIEW CART
-          </Link>
-
-          <Link
-            to="/checkout"
-            onClick={() => toggleCartPannel(false)}
-            className="flex-1 h-[40px] bg-[#ff6347] text-white rounded font-semibold flex items-center justify-center hover:bg-[#e05338] transition-colors"
-          >
-            CHECKOUT
-          </Link>
-        </div>
+        )}
       </div>
     </Drawer>
   );

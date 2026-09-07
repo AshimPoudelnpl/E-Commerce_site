@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with synchronized shopping cart for cross-device persistence",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Unique Firebase user identifier"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "name": {
+          "type": "string",
+          "description": "User display name"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "User avatar profile picture URL"
+        },
+        "cart": {
+          "type": "array",
+          "description": "Synchronized cart items across devices",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "productId": { "type": "number" },
+              "product": { "type": "object" },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" },
+              "selectedSize": { "type": "string" },
+              "selectedColor": { "type": "string" }
+            },
+            "required": ["id", "productId", "quantity", "price"]
+          }
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": ["uid"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document containing cross-device cart synchronization"
+    }
+  }
+}

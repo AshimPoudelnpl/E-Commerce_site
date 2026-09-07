@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import {
   LineChart,
   Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -200,7 +202,7 @@ const columns: {
 ];
 
 const DashBoardBoxes = () => {
-  const userName = "Cameron";
+  const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const [isOpenOrderedProduct, setIsOpenOrderedProduct] = useState<
     number | null
   >(null);
@@ -667,11 +669,41 @@ const DashBoardBoxes = () => {
         </div>
       </div>
 
-      {/* Sales Analytics */}
+      {/* Sales Analytics with Bar Chart & Line Chart Toggle */}
       <div className="bg-white rounded-md border border-[rgba(0,0,0,0.1)] p-5 mt-5">
-        <h2 className="text-[18px] font-medium text-gray-800 mb-4">
-          Sales Analytics
-        </h2>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div>
+            <h2 className="text-[18px] font-bold text-gray-800">
+              Sales Analytics & Performance
+            </h2>
+            <p className="text-xs text-gray-500">
+              Visual comparison of monthly orders, revenue, and product page conversions.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setChartType("bar")}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                chartType === "bar"
+                  ? "bg-white text-blue-600 shadow-xs"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              📊 Bar Chart
+            </button>
+            <button
+              onClick={() => setChartType("line")}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                chartType === "line"
+                  ? "bg-white text-blue-600 shadow-xs"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              📈 Line Chart
+            </button>
+          </div>
+        </div>
 
         <style>{`
           .recharts-wrapper:focus,
@@ -681,37 +713,74 @@ const DashBoardBoxes = () => {
           }
         `}</style>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart
-            data={salesChartData}
-            margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="name" stroke="#9ca3af" axisLine={false} tickLine={false} />
-            <YAxis stroke="#9ca3af" axisLine={false} tickLine={false} />
-            <Tooltip
-              cursor={{ stroke: "#e5e7eb" }}
-              contentStyle={{
-                backgroundColor: "#ffffff",
-                borderColor: "#e5e7eb",
-                borderRadius: 8,
-              }}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="pv"
-              stroke="#3872fa"
-              dot={{ fill: "#ffffff" }}
-              activeDot={{ r: 8, stroke: "#ffffff" }}
-            />
-            <Line
-              type="monotone"
-              dataKey="uv"
-              stroke="#1eae5f"
-              dot={{ fill: "#ffffff" }}
-              activeDot={{ stroke: "#ffffff" }}
-            />
-          </LineChart>
+          {chartType === "bar" ? (
+            <BarChart
+              data={salesChartData}
+              margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f2f5" vertical={false} />
+              <XAxis dataKey="name" stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <YAxis stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <Tooltip
+                cursor={{ fill: "#f9fafb" }}
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  borderColor: "#e5e7eb",
+                  borderRadius: 8,
+                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                }}
+              />
+              <Legend />
+              <Bar
+                dataKey="pv"
+                name="Sales Volume (PV)"
+                fill="#3872fa"
+                radius={[6, 6, 0, 0]}
+              />
+              <Bar
+                dataKey="uv"
+                name="Customer Visits (UV)"
+                fill="#1eae5f"
+                radius={[6, 6, 0, 0]}
+              />
+            </BarChart>
+          ) : (
+            <LineChart
+              data={salesChartData}
+              margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="name" stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <YAxis stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <Tooltip
+                cursor={{ stroke: "#e5e7eb" }}
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  borderColor: "#e5e7eb",
+                  borderRadius: 8,
+                }}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="pv"
+                name="Sales Volume (PV)"
+                stroke="#3872fa"
+                strokeWidth={2}
+                dot={{ fill: "#ffffff", r: 4 }}
+                activeDot={{ r: 8, stroke: "#ffffff" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="uv"
+                name="Customer Visits (UV)"
+                stroke="#1eae5f"
+                strokeWidth={2}
+                dot={{ fill: "#ffffff", r: 4 }}
+                activeDot={{ stroke: "#ffffff" }}
+              />
+            </LineChart>
+          )}
         </ResponsiveContainer>
       </div>
     </div>

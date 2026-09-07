@@ -18,15 +18,17 @@ function CategoryPanel({
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" className="categoryPanel">
-      <h3 className="p-3 text-[16px] font-[500] flex items-center justify-between">
-        Shop By Categories
+    <Box sx={{ width: 280 }} role="presentation" className="categoryPanel p-4">
+      <div className="flex items-center justify-between border-b pb-3 mb-2">
+        <h3 className="text-[16px] font-bold text-gray-800">
+          Shop By Categories
+        </h3>
         <IoCloseSharp
           onClick={toggleDrawer(false)}
-          className="cursor-pointer text-[20px]"
+          className="cursor-pointer text-[22px] text-gray-500 hover:text-black"
         />
-      </h3>
-      <CategoryCollapse />
+      </div>
+      <CategoryCollapse onCloseDrawer={openCategoryPanel} />
     </Box>
   );
 

@@ -1,424 +1,362 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useContext } from "react";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import MuiLink from "@mui/material/Link";
+import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import toast from "react-hot-toast";
+
 import ProductZoom from "../components/ProductZoom";
-import QtyBox from "../components/QtyBox";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaRegHeart } from "react-icons/fa6";
-import { IoGitCompareOutline } from "react-icons/io5";
-import { TextField } from "@mui/material";
-import ProductSlider from "../components/ProductSlider";
 import ProductDetails1 from "../components/ProductDetails";
+import ProductSlider from "../components/ProductSlider";
+import { MyContext } from "../context/MyContext";
+import { getProductById, getProductsByCategory, initialProducts, type ReviewItem, type Product } from "../types/product";
 
 function ProductDetails() {
+  const { id } = useParams<{ id: string }>();
+  const context = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(0);
+
+  // Find product dynamically by ID
+  const product: Product = useMemo(() => {
+    const numId = Number(id);
+    if (!isNaN(numId)) {
+      const foundInContext = context.products?.find((p) => p.id === numId);
+      if (foundInContext) return foundInContext;
+      const foundInInitial = getProductById(numId);
+      if (foundInInitial) return foundInInitial;
+    }
+    return initialProducts[0];
+  }, [id, context.products]);
+
+  // Related products from the same category (excluding current product)
+  const relatedProducts = useMemo(() => {
+    const categorySlug = product.categorySlug || product.category.toLowerCase().replace(/\s+/g, "-");
+    const sameCat = getProductsByCategory(categorySlug);
+    const filtered = sameCat.filter((p) => p.id !== product.id);
+    return filtered.length > 0 ? filtered : initialProducts.filter((p) => p.id !== product.id).slice(0, 6);
+  }, [product]);
+
+  // Reviews state with interactive add review
+  const [reviews, setReviews] = useState<ReviewItem[]>(() => {
+    if (product.reviews && product.reviews.length > 0) {
+      return product.reviews;
+    }
+    return [
+      {
+        id: "1",
+        name: "Aarav Sharma",
+        userName: "Aarav Sharma",
+        rating: 5,
+        date: "2 days ago",
+        comment: "Excellent quality! The finish and fabric exceeded my expectations. Delivery was very fast.",
+      },
+      {
+        id: "2",
+        name: "Priya Patel",
+        userName: "Priya Patel",
+        rating: 4,
+        date: "1 week ago",
+        comment: "Very comfortable and fits as described. Would definitely buy again in other colors.",
+      },
+      {
+        id: "3",
+        name: "Rajesh Kumar",
+        userName: "Rajesh Kumar",
+        rating: 5,
+        date: "2 weeks ago",
+        comment: "Top notch product and great packaging. Worth every rupee!",
+      },
+    ];
+  });
+
+  // Review form state
+  const [reviewRating, setReviewRating] = useState<number | null>(5);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewComment, setReviewComment] = useState("");
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewName.trim() || !reviewComment.trim()) {
+      toast.error("Please enter your name and comment.");
+      return;
+    }
+
+    const newReview: ReviewItem = {
+      id: Date.now().toString(),
+      name: reviewName.trim(),
+      userName: reviewName.trim(),
+      rating: reviewRating || 5,
+      date: "Just now",
+      comment: reviewComment.trim(),
+    };
+
+    setReviews([newReview, ...reviews]);
+    setReviewName("");
+    setReviewComment("");
+    setReviewRating(5);
+    toast.success("Thank you! Your review has been submitted.");
+  };
+
   return (
-    <>
-      <div className="py-5 ">
+    <div className="bg-[#fbfbfb] min-h-screen pb-16">
+      {/* Breadcrumb Navigation */}
+      <div className="py-4 bg-white border-b border-gray-100">
         <div className="container">
           <Breadcrumbs aria-label="breadcrumb">
-            <MuiLink underline="hover" color="inherit" href="/">
+            <MuiLink component={RouterLink} underline="hover" color="inherit" to="/">
               Home
             </MuiLink>
-            <Typography sx={{ color: "text.primary" }}>Products</Typography>
+            <MuiLink component={RouterLink} underline="hover" color="inherit" to="/products">
+              Products
+            </MuiLink>
+            <MuiLink
+              component={RouterLink}
+              underline="hover"
+              color="inherit"
+              to={`/category/${product.categorySlug || product.category.toLowerCase().replace(/\s+/g, "-")}`}
+            >
+              {product.category}
+            </MuiLink>
+            <Typography sx={{ color: "text.primary", fontWeight: 500 }} className="line-clamp-1 max-w-[280px]">
+              {product.name}
+            </Typography>
           </Breadcrumbs>
         </div>
       </div>
-      <section className="bg-white py-5">
-        <div className="container flex gap-8 mt-5">
-          <div className="productZoomContainer w-[30%] h-[50vh] overflow-hidden">
-            <ProductZoom />
+
+      {/* Product Hero Section */}
+      <section className="bg-white py-8 border-b border-gray-200">
+        <div className="container flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+          {/* Gallery / Zoom */}
+          <div className="w-full lg:w-[45%] flex-shrink-0">
+            <ProductZoom images={product.images && product.images.length > 0 ? product.images : [product.img]} />
           </div>
 
-          <ProductDetails1 />
-        </div>
-        <div className="container pt-10">
-          <div className="flex items-center gap-8 pb-3 mb-5">
-            <span
-              onClick={() => setActiveTab(0)}
-              className={`link text-[17px] cursor-pointer font-[500] transition-colors ${activeTab === 0 ? "text-[#f0574c]" : "hover:text-[#f0574c]"}`}
-            >
-              Description
-            </span>
-            <span
-              onClick={() => setActiveTab(1)}
-              className={`link text-[17px] cursor-pointer font-[500] transition-colors ${activeTab === 1 ? "text-[#f0574c]" : "hover:text-[#f0574c]"}`}
-            >
-              Product Details
-            </span>
-            <span
-              onClick={() => setActiveTab(2)}
-              className={`link text-[17px] cursor-pointer font-[500] transition-colors ${activeTab === 2 ? "text-[#f0574c]" : "hover:text-[#f0574c]"}`}
-            >
-              Reviews (5)
-            </span>
-          </div>
-          {activeTab === 0 && (
-            <div className="w-full p-5 border border-gray-300 rounded-md">
-              <p className="mb-4 text-gray-700 leading-relaxed">
-                The best is yet to come! Give your walls a voice with a framed
-                poster. This aesthetic, optimistic poster will look great in
-                your desk or in an open-space office. Painted wooden frame with
-                passe-partout for more depth.
-              </p>
-              <h4 className="font-semibold text-lg mb-2">Lightweight Design</h4>
-              <p className="text-gray-700 leading-relaxed">
-                Designed with a super light geometric case, the Versa family
-                watches are slim, casual and comfortable enough to wear all day
-                and night. Switch up your look with classic, leather, metal and
-                woven accessory bands. Ut elit tellus, luctus nec ullamcorper
-                mattis, pulvinar dapibus leo.
-              </p>
-            </div>
-          )}
-          {activeTab === 1 && (
-            <div className="w-full p-5 border border-gray-300 rounded-md">
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h5 className="font-semibold text-gray-900 mb-2">
-                      Product Specifications
-                    </h5>
-                    <table className="w-full text-sm">
-                      <tbody>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Brand
-                          </td>
-                          <td className="py-2 text-gray-900">EagleBird</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Material
-                          </td>
-                          <td className="py-2 text-gray-900">100% Cotton</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Fit Type
-                          </td>
-                          <td className="py-2 text-gray-900">Regular Fit</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Neck Style
-                          </td>
-                          <td className="py-2 text-gray-900">Round Neck</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Sleeve Type
-                          </td>
-                          <td className="py-2 text-gray-900">Half Sleeve</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 font-medium text-gray-600">
-                            Pattern
-                          </td>
-                          <td className="py-2 text-gray-900">Solid</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div>
-                    <h5 className="font-semibold text-gray-900 mb-2">
-                      Product Details
-                    </h5>
-                    <table className="w-full text-sm">
-                      <tbody>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            SKU
-                          </td>
-                          <td className="py-2 text-gray-900">TS-RND-001</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Color
-                          </td>
-                          <td className="py-2 text-gray-900">
-                            Multiple Colors Available
-                          </td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Size
-                          </td>
-                          <td className="py-2 text-gray-900">S, M, L, XL</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Weight
-                          </td>
-                          <td className="py-2 text-gray-900">200g</td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 font-medium text-gray-600">
-                            Care Instructions
-                          </td>
-                          <td className="py-2 text-gray-900">Machine Wash</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 font-medium text-gray-600">
-                            Country of Origin
-                          </td>
-                          <td className="py-2 text-gray-900">India</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeTab === 2 && (
-            <div className="w-full p-5 border border-gray-300 rounded-md">
-              <div className="mb-6">
-                <h5 className="font-semibold text-gray-900 mb-4">
-                  Customer Reviews
-                </h5>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-gray-900">4.0</div>
-                    <div className="text-yellow-500 text-xl">★★★★☆</div>
-                    <div className="text-sm text-gray-500">
-                      Based on 5 reviews
-                    </div>
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm w-12">5 ★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full"
-                          style={{ width: "60%" }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-600">3</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm w-12">4 ★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full"
-                          style={{ width: "40%" }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-600">2</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm w-12">3 ★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full"
-                          style={{ width: "0%" }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-600">0</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm w-12">2 ★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full"
-                          style={{ width: "0%" }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-600">0</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm w-12">1 ★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full"
-                          style={{ width: "0%" }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-600">0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {/* Review 1 */}
-                <div className=" pb-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-[50px] h-[50px] overflow-hidden rounded-full flex-shrink-0">
-                      <img
-                        src="https://randomuser.me/api/portraits/men/32.jpg"
-                        className="w-full h-full object-cover"
-                        alt="Rahul Kumar"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <h6 className="font-semibold text-gray-900">
-                            Rahul Kumar
-                          </h6>
-                          <div className="text-yellow-500 text-sm">★★★★★</div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          2 days ago
-                        </span>
-                      </div>
-                      <p className="text-gray-700 text-sm">
-                        Excellent quality t-shirt! The fabric is soft and
-                        comfortable. Fits perfectly as described. Great value
-                        for money. Highly recommended!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 2 */}
-                <div className="pb-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-[50px] h-[50px] overflow-hidden rounded-full flex-shrink-0">
-                      <img
-                        src="https://randomuser.me/api/portraits/women/44.jpg"
-                        className="w-full h-full object-cover"
-                        alt="Priya Sharma"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <h6 className="font-semibold text-gray-900">
-                            Priya Sharma
-                          </h6>
-                          <div className="text-yellow-500 text-sm">★★★★★</div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          1 week ago
-                        </span>
-                      </div>
-                      <p className="text-gray-700 text-sm">
-                        Bought this for my husband and he absolutely loves it!
-                        The material is breathable and perfect for summer. The
-                        color hasn't faded after multiple washes.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 3 */}
-                <div className="pb-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-[50px] h-[50px] overflow-hidden rounded-full flex-shrink-0">
-                      <img
-                        src="https://randomuser.me/api/portraits/men/52.jpg"
-                        className="w-full h-full object-cover"
-                        alt="Amit Patel"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <h6 className="font-semibold text-gray-900">
-                            Amit Patel
-                          </h6>
-                          <div className="text-yellow-500 text-sm">★★★★☆</div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          2 weeks ago
-                        </span>
-                      </div>
-                      <p className="text-gray-700 text-sm">
-                        Good quality t-shirt. The fit is nice but I wish it was
-                        slightly longer. Overall satisfied with the purchase.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 4 */}
-                <div className="pb-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-[50px] h-[50px] overflow-hidden rounded-full flex-shrink-0">
-                      <img
-                        src="https://randomuser.me/api/portraits/women/65.jpg"
-                        className="w-full h-full object-cover"
-                        alt="Sneha Verma"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <h6 className="font-semibold text-gray-900">
-                            Sneha Verma
-                          </h6>
-                          <div className="text-yellow-500 text-sm">★★★★★</div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          3 weeks ago
-                        </span>
-                      </div>
-                      <p className="text-gray-700 text-sm">
-                        Amazing product! Very comfortable to wear all day. The
-                        stitching quality is excellent and the price point is
-                        reasonable. Will definitely buy more colors.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 5 */}
-                <div className="pb-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-[50px] h-[50px] overflow-hidden rounded-full flex-shrink-0">
-                      <img
-                        src="https://randomuser.me/api/portraits/men/67.jpg"
-                        className="w-full h-full object-cover"
-                        alt="Vikram Singh"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <h6 className="font-semibold text-gray-900">
-                            Vikram Singh
-                          </h6>
-                          <div className="text-yellow-500 text-sm">★★★★☆</div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          1 month ago
-                        </span>
-                      </div>
-                      <p className="text-gray-700 text-sm">
-                        Nice t-shirt for the price. Fabric quality is good and
-                        it's quite comfortable. Delivery was quick too!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <form className="w-full">
-                <TextField
-                  id="outlined-multiline-flexible"
-                  label="Write a review ... "
-                  className="w-full"
-                  multiline
-                  maxRows={4}
-                />
-              </form>
-              <div className="mt-6 pt-6 border-t">
-                <button className="bg-[#f0574c] text-white px-6 py-2 rounded font-medium hover:bg-[#d9483d] transition-colors">
-                  Add Review
-                </button>
-              </div>
-            </div>
-          )}
-          <div className="container">
-            <h2 className="text-[20px] font-[600] py-6">Related Products</h2>
-            <ProductSlider items={6} />
+          {/* Product Details & Actions */}
+          <div className="w-full lg:w-[55%]">
+            <ProductDetails1 product={product} />
           </div>
         </div>
       </section>
-    </>
+
+      {/* Tabs Section: Description, Specifications, Reviews */}
+      <section className="container pt-10">
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+          {/* Tabs Navigation Header */}
+          <div className="flex items-center gap-6 border-b border-gray-200 pb-4 mb-6 overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => setActiveTab(0)}
+              className={`text-base sm:text-lg font-semibold cursor-pointer pb-2 relative transition-colors whitespace-nowrap ${
+                activeTab === 0
+                  ? "text-[#ff5252] border-b-2 border-[#ff5252]"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              Product Description
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab(1)}
+              className={`text-base sm:text-lg font-semibold cursor-pointer pb-2 relative transition-colors whitespace-nowrap ${
+                activeTab === 1
+                  ? "text-[#ff5252] border-b-2 border-[#ff5252]"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              Technical Specifications
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab(2)}
+              className={`text-base sm:text-lg font-semibold cursor-pointer pb-2 relative transition-colors whitespace-nowrap ${
+                activeTab === 2
+                  ? "text-[#ff5252] border-b-2 border-[#ff5252]"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              Customer Reviews ({reviews.length})
+            </button>
+          </div>
+
+          {/* Tab 0: Description */}
+          {activeTab === 0 && (
+            <div className="space-y-4 text-gray-700 leading-relaxed max-w-4xl">
+              <p className="text-base font-normal">
+                {product.description}
+              </p>
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-100 my-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Key Highlights:</h4>
+                <ul className="list-disc list-inside space-y-1.5 text-sm text-gray-600">
+                  <li>Premium authentic materials certified for quality and long-lasting durability.</li>
+                  <li>Curated by top-tier designers for optimal comfort and everyday performance.</li>
+                  <li>100% Genuine product backed by official manufacturer warranty.</li>
+                  <li>Easy 7-day hassle-free returns and responsive customer support.</li>
+                </ul>
+              </div>
+              <p className="text-sm text-gray-500">
+                Care instructions: Keep in a dry, ventilated place. For apparel, gentle machine wash with mild detergent; for electronics, wipe with soft microfiber cloth.
+              </p>
+            </div>
+          )}
+
+          {/* Tab 1: Specifications */}
+          {activeTab === 1 && (
+            <div className="max-w-2xl">
+              <h4 className="font-semibold text-gray-900 mb-3 text-base">Specifications</h4>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm text-left">
+                  <tbody>
+                    <tr className="border-b border-gray-100 bg-gray-50">
+                      <td className="py-2.5 px-4 font-semibold text-gray-600 w-1/3">Brand</td>
+                      <td className="py-2.5 px-4 text-gray-900">{product.brand || "Authentic"}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2.5 px-4 font-semibold text-gray-600">Category</td>
+                      <td className="py-2.5 px-4 text-gray-900">{product.category}</td>
+                    </tr>
+                    {product.subCategory && (
+                      <tr className="border-b border-gray-100 bg-gray-50">
+                        <td className="py-2.5 px-4 font-semibold text-gray-600">Sub-Category</td>
+                        <td className="py-2.5 px-4 text-gray-900">{product.subCategory}</td>
+                      </tr>
+                    )}
+                    {product.specs &&
+                      Object.entries(product.specs).map(([key, val], idx) => (
+                        <tr
+                          key={key}
+                          className={`border-b border-gray-100 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                        >
+                          <td className="py-2.5 px-4 font-semibold text-gray-600 capitalize">{key}</td>
+                          <td className="py-2.5 px-4 text-gray-900">{val}</td>
+                        </tr>
+                      ))}
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2.5 px-4 font-semibold text-gray-600">Stock Availability</td>
+                      <td className="py-2.5 px-4 text-gray-900">
+                        {product.countInStock > 0 ? `${product.countInStock} Units in Stock` : "Out of Stock"}
+                      </td>
+                    </tr>
+                    <tr className="bg-gray-50">
+                      <td className="py-2.5 px-4 font-semibold text-gray-600">Product SKU</td>
+                      <td className="py-2.5 px-4 text-gray-900">SKU-{product.id}-2026</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: Reviews */}
+          {activeTab === 2 && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              {/* Existing reviews list */}
+              <div className="lg:col-span-7 space-y-4">
+                <h4 className="font-semibold text-gray-900 text-base mb-4">
+                  Customer Feedback ({reviews.length})
+                </h4>
+                {reviews.map((rev) => (
+                  <div key={rev.id} className="border border-gray-100 rounded-lg p-4 bg-gray-50">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar sx={{ width: 32, height: 32, bgcolor: "#ff5252", fontSize: "14px" }}>
+                          {(rev.userName || rev.name || "C").charAt(0)}
+                        </Avatar>
+                        <div>
+                          <h5 className="font-semibold text-sm text-gray-900">
+                            {rev.userName || rev.name || "Customer"}
+                          </h5>
+                          <span className="text-xs text-gray-400">{rev.date}</span>
+                        </div>
+                      </div>
+                      <Rating value={rev.rating} readOnly size="small" sx={{ color: "#f59e0b" }} />
+                    </div>
+                    <p className="text-sm text-gray-700">{rev.comment}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Submit review form */}
+              <div className="lg:col-span-5 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                <h4 className="font-bold text-gray-900 text-base mb-3">Add Your Review</h4>
+                <form onSubmit={handleReviewSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Your Rating *
+                    </label>
+                    <Rating
+                      value={reviewRating}
+                      onChange={(_e, val) => setReviewRating(val)}
+                      sx={{ color: "#f59e0b" }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Your Name *
+                    </label>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={reviewName}
+                      onChange={(e) => setReviewName(e.target.value)}
+                      placeholder="e.g. John Doe"
+                      className="bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Your Review *
+                    </label>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      size="small"
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      placeholder="Share your thoughts about this product..."
+                      className="bg-white"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    className="!bg-[#ff5252] hover:!bg-[#e04545] !text-white !capitalize !w-full !py-2 !rounded-lg"
+                  >
+                    Submit Review
+                  </Button>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Related Products Slider */}
+      <section className="container pt-12">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">Related Products</h3>
+            <p className="text-xs text-gray-500">More items in {product.category}</p>
+          </div>
+          <MuiLink
+            component={RouterLink}
+            to={`/category/${product.categorySlug || product.category.toLowerCase().replace(/\s+/g, "-")}`}
+            className="text-xs font-semibold text-[#ff5252] hover:underline"
+          >
+            View All in {product.category} →
+          </MuiLink>
+        </div>
+        <ProductSlider products={relatedProducts} />
+      </section>
+    </div>
   );
 }
 

@@ -1,0 +1,6 @@
+{
+  "name": "E-Commerce Site",
+  "description": "An e-commerce shopping platform with product catalog, cart, and account management",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

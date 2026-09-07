@@ -11,11 +11,14 @@ import { uploadData } from "../../utils/api";
 import { MyContext } from "../../context/MyContext";
 
 type SideBarProps = {
-  activeSection: "profile" | "password" | "address";
-  setActiveSection: (s: "profile" | "password" | "address") => void;
+  activeSection?: "profile" | "password" | "address";
+  setActiveSection?: (s: "profile" | "password" | "address") => void;
 };
 
-const AcccountSideaBar = ({ activeSection, setActiveSection }: SideBarProps) => {
+const AcccountSideaBar = ({
+  activeSection = "profile",
+  setActiveSection = () => {},
+}: SideBarProps) => {
   const context = useContext(MyContext);
   const [preview, setPreview] = useState<string | null>(null);
 
