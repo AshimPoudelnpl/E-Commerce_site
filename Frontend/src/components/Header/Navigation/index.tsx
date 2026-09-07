@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { LiaAngleDownSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
@@ -8,168 +8,113 @@ import CategoryPanel from "./CategoryPanel";
 import "./style.css";
 
 function Navigation(): React.JSX.Element {
-  const [isopenCategoryPanel, setIsOpenCategoryPanel] = React.useState(false);
+  const [isOpenCategoryPanel, setIsOpenCategoryPanel] =
+    useState<boolean>(false);
+
   const openCategoryPanel = () => {
-    setIsOpenCategoryPanel(!isopenCategoryPanel);
+    setIsOpenCategoryPanel((prev) => !prev);
   };
 
   return (
     <>
-      <nav className="py-2">
-        <div className="container flex items-center justify-end gap-5">
-          <div className="col_1 w-[20%]">
+      <nav className="py-2 border-b border-gray-100 shadow-sm">
+        <div className="container flex items-center justify-between gap-2 md:gap-5 px-2 md:px-4">
+          {/* Categories Button */}
+          <div className="col_1 w-auto lg:w-[20%] flex-shrink-0">
             <Button
-              className="!text-black gap-2 w-full"
+              className="!text-black gap-1 md:gap-2 text-[13px] md:text-[14px] !font-[600] whitespace-nowrap !py-1 !min-w-fit"
               onClick={openCategoryPanel}
             >
               <HiOutlineMenuAlt1 className="text-[18px]" />
-              Shop By Categories
-              <LiaAngleDownSolid className="text-[13px] ml-auto font-bold" />
+
+              <span className="hidden sm:inline">Shop By Categories</span>
+
+              <span className="sm:hidden">Categories</span>
+
+              <LiaAngleDownSolid className="text-[13px] ml-1 font-bold" />
             </Button>
           </div>
-          <div className="col_2 w-[65%]">
-            <ul className="flex items-center gap-8">
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
+
+          {/* Navigation Links */}
+          <div className="col_2 flex-1 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-none py-1">
+            <ul className="flex items-center gap-4 md:gap-6 lg:gap-8 min-w-max px-2 m-0 p-0">
+              {/* Home */}
+              <li className="list-none flex-shrink-0">
+                <Link
+                  to="/"
+                  className="link transition text-[13px] md:text-[14px] font-[500] hover:text-[#ff5252]"
+                >
                   Home
                 </Link>
               </li>
-              <li className="list-none relative">
-                <Link to="/" className="link transition text-[14px] font-[500]">
+
+              {/* Fashion */}
+              <li className="list-none relative flex-shrink-0 group">
+                <Link
+                  to="/"
+                  className="link transition text-[13px] md:text-[14px] font-[500] hover:text-[#ff5252]"
+                >
                   Fashion
                 </Link>
-                <div className="submenu absolute top-[100%] left-[0%] min-w-[200px] bg-white shadow-md">
+
+                <div className="submenu absolute top-[100%] left-0 min-w-[200px] bg-white shadow-md z-50">
                   <ul>
                     <li className="list-none w-full">
-                      <Link
-                        to="/fashion/men"
-                        className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                      >
+                      <Link to="/fashion/men" className="block px-3 py-2">
                         Men
                       </Link>
-                      <div className="submenu absolute top-[0%] left-[100%] min-w-[200px] bg-white shadow-md">
-                        <ul>
-                          <li className="list-none w-full">
-                            <Link
-                              to="/fashion/men/tshirt"
-                              className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                            >
-                              T-shirt
-                            </Link>
-                          </li>
-                          <li className="list-none w-full">
-                            <Link
-                              to="/fashion/men/jeans"
-                              className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                            >
-                              Jeans
-                            </Link>
-                          </li>
-                          <li className="list-none w-full">
-                            <Link
-                              to="/fashion/men/footwear"
-                              className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                            >
-                              Footwear
-                            </Link>
-                          </li>
-                          <li className="list-none w-full">
-                            <Link
-                              to="/fashion/men/watch"
-                              className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                            >
-                              Watch
-                            </Link>
-                          </li>
-                          <li className="list-none w-full">
-                            <Link
-                              to="/fashion/men/pants"
-                              className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                            >
-                              Pants
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
                     </li>
+
                     <li className="list-none w-full">
-                      <Link
-                        to="/fashion/women"
-                        className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                      >
+                      <Link to="/fashion/women" className="block px-3 py-2">
                         Women
                       </Link>
                     </li>
+
                     <li className="list-none w-full">
-                      <Link
-                        to="/fashion/kids"
-                        className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                      >
+                      <Link to="/fashion/kids" className="block px-3 py-2">
                         Kids
-                      </Link>
-                    </li>
-                    <li className="list-none w-full">
-                      <Link
-                        to="/fashion/girls"
-                        className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                      >
-                        Girls
-                      </Link>
-                    </li>
-                    <li className="list-none w-full">
-                      <Link
-                        to="/fashion/boys"
-                        className="block px-3 py-2 text-[rgba(0,0,0,0.8)] hover:bg-gray-100"
-                      >
-                        Boys
                       </Link>
                     </li>
                   </ul>
                 </div>
               </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Electronics
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Bags
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Footwear
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Groceries
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Beauty
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Jewellery
-                </Link>
-              </li>
+
+              {/* Other Categories */}
+              {[
+                "Electronics",
+                "Bags",
+                "Footwear",
+                "Groceries",
+                "Beauty",
+                "Jewellery",
+              ].map((item) => (
+                <li key={item} className="list-none flex-shrink-0">
+                  <Link
+                    to="/"
+                    className="link transition text-[13px] md:text-[14px] font-[500] hover:text-[#ff5252]"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className="col_3 w-fit flex-shrink-0 flex items-center gap-3 whitespace-nowrap">
-            <p className="font-[300] text-[14px] flex items-center gap-3 mb-0 mt-0">
-              <GoRocket className="text-[18px]" />
+
+          {/* Delivery */}
+          <div className="col_3 hidden xl:flex flex-shrink-0 items-center gap-3 whitespace-nowrap pl-4">
+            <p className="font-[300] text-[13px] flex items-center gap-2 mb-0 mt-0 text-gray-600">
+              <GoRocket className="text-[16px] text-[#ff5252]" />
               Free International Delivery
             </p>
           </div>
         </div>
       </nav>
+
+      {/* Category Panel */}
       <CategoryPanel
         openCategoryPanel={openCategoryPanel}
-        isopenCategoryPanel={isopenCategoryPanel}
+        isopenCategoryPanel={isOpenCategoryPanel}
       />
     </>
   );

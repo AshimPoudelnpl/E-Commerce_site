@@ -8,17 +8,17 @@ const promos = [
 
 function PromoCards() {
   return (
-    <div className="flex flex-col gap-5 h-full">
+    <div className="flex flex-row sm:flex-col gap-3 sm:gap-5 h-full">
       {promos.map((promo, index) => (
         <a
           href={promo.href}
           key={index}
-          className="block flex-1 h-[200px] rounded-[20px] overflow-hidden bg-blue-100"
+          className="block flex-1 h-[130px] sm:h-[170px] md:h-[200px] rounded-[12px] sm:rounded-[20px] overflow-hidden bg-blue-100 group"
         >
           <img
             src={promo.image}
             alt="Promo"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-all group-hover:scale-105"
           />
         </a>
       ))}

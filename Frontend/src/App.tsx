@@ -1,4 +1,6 @@
-import React, { createContext, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { MyContext } from "./context/MyContext";
+import { getData } from "./utils/api";
 import Header from "./components/Header/Index";
 import Footer from "./components/Footer/index";
 import { Route, Routes } from "react-router-dom"; // Removed BrowserRouter import
@@ -22,6 +24,7 @@ import CartPanel from "./components/cartPanel";
 import Cart from "./pages/Cart";
 import Verify from "./components/verify";
 import ForgotPassword from "./pages/Forgot-passwprd";
+import ResetPassword from "./pages/ResetPassword";
 import toast, { Toaster } from "react-hot-toast";
 import Checkout from "./pages/Checkout";
 import Myaccount from "./pages/Myaccount";
@@ -37,15 +40,28 @@ const alertBox = ({ msg, type }: { msg: string; type: string }) => {
   }
 };
 
-export const MyContext = createContext<any>({});
-
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] =
     React.useState(false);
   const [maxWidth, setMaxWidth] = React.useState<DialogProps["maxWidth"]>("lg");
   const [fullWidth, setFullWidth] = React.useState(true);
   const [openCartPanel, setCartOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [userData, setUserData] = useState<unknown>(null);
+  const [catData, setCatData] = useState<unknown[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      getData("/api/user/user-details").then((res) => {
+        if (res?.success) {
+          setUser(res.data);
+          setIsLogin(true);
+        }
+      });
+    }
+  }, [isLogin]);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleCloseProductDetailsModal = () => {
@@ -74,6 +90,11 @@ function App() {
     setIsLogin,
     alertBox,
     apiUrl,
+    user,
+    setUser,
+    userData,
+    setUserData,
+    catData,
   };
 
   return (
@@ -90,6 +111,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/my-account" element={<Myaccount />} />
           <Route path="/my-list" element={<Mylist />} />

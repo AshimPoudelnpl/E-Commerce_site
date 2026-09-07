@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Drawer from "@mui/material/Drawer";
 import { IoCloseSharp } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
-import { MyContext } from "../../App";
+import { MyContext } from "../../context/MyContext";
 import productImage from "../../assets/578c27b4ff2171e9c60dfafbe9a04616.jpg";
 import { Link } from "react-router-dom";
 
@@ -15,8 +15,7 @@ const CartPanel = () => {
       onClose={() => toggleCartPannel(false)}
       anchor="right"
     >
-      <div className="w-[380px] max-w-[100vw] h-screen flex flex-col">
-
+      <div className="w-[300px] sm:w-[380px] max-w-[100vw] h-screen flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center px-4 py-3 border-b">
           <h4>Shopping Cart (1)</h4>
@@ -39,7 +38,10 @@ const CartPanel = () => {
 
           <div className="flex-1">
             <div className="flex justify-between">
-              <Link to="/productDetails/22" className="text-[14px] hover:text-[#ff6347] font-bold">
+              <Link
+                to="/productDetails/22"
+                className="text-[14px] hover:text-[#ff6347] font-bold"
+              >
                 Mens Cotton Casual Short Sleeve T-Shirts
               </Link>
 
@@ -49,7 +51,8 @@ const CartPanel = () => {
             <div className="flex justify-between items-center text-[14px] mt-2">
               <span className="text-gray-500 font-medium">QTY: 1</span>
               <span className="text-gray-500 font-medium">
-                Price: <span className="text-[#ff6347] font-semibold">$86.00</span>
+                Price:{" "}
+                <span className="text-[#ff6347] font-semibold">$86.00</span>
               </span>
             </div>
           </div>
@@ -65,7 +68,10 @@ const CartPanel = () => {
 
           <div className="flex-1">
             <div className="flex justify-between">
-              <Link to="/productDetails/22" className="text-[14px] hover:text-[#ff6347] font-bold">
+              <Link
+                to="/productDetails/22"
+                className="text-[14px] hover:text-[#ff6347] font-bold"
+              >
                 Mens Cotton Casual Short Sleeve T-Shirts
               </Link>
 
@@ -75,7 +81,8 @@ const CartPanel = () => {
             <div className="flex justify-between items-center text-[14px] mt-2">
               <span className="text-gray-500 font-medium">QTY: 1</span>
               <span className="text-gray-500 font-medium">
-                Price: <span className="text-[#ff6347] font-semibold">$86.00</span>
+                Price:{" "}
+                <span className="text-[#ff6347] font-semibold">$86.00</span>
               </span>
             </div>
           </div>
@@ -91,7 +98,10 @@ const CartPanel = () => {
 
           <div className="flex-1">
             <div className="flex justify-between">
-              <Link to="/productDetails/22" className="text-[14px] hover:text-[#ff6347] font-bold">
+              <Link
+                to="/productDetails/22"
+                className="text-[14px] hover:text-[#ff6347] font-bold"
+              >
                 Mens Cotton Casual Short Sleeve T-Shirts
               </Link>
 
@@ -101,7 +111,8 @@ const CartPanel = () => {
             <div className="flex justify-between items-center text-[14px] mt-2">
               <span className="text-gray-500 font-medium">QTY: 1</span>
               <span className="text-gray-500 font-medium">
-                Price: <span className="text-[#ff6347] font-semibold">$86.00</span>
+                Price:{" "}
+                <span className="text-[#ff6347] font-semibold">$86.00</span>
               </span>
             </div>
           </div>
@@ -151,15 +162,14 @@ const CartPanel = () => {
             VIEW CART
           </Link>
 
-          <Link   
+          <Link
             to="/checkout"
             onClick={() => toggleCartPannel(false)}
             className="flex-1 h-[40px] bg-[#ff6347] text-white rounded font-semibold flex items-center justify-center hover:bg-[#e05338] transition-colors"
           >
             CHECKOUT
-          </Link>   
+          </Link>
         </div>
-
       </div>
     </Drawer>
   );

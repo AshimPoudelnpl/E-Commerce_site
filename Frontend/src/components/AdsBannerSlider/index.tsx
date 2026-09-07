@@ -30,7 +30,10 @@ function AdsBannerSlider({ items }: { items?: number }) {
       >
         {banners.map((banner, i) => (
           <SwiperSlide key={i} style={{ height: "auto" }}>
-            <Link to={banner.link} className="block w-full overflow-hidden rounded-md group">
+            <Link
+              to={banner.link}
+              className="block w-full overflow-hidden rounded-md group"
+            >
               <img
                 src={banner.img}
                 alt={`banner-${i + 1}`}

@@ -1,7 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
-import { Button } from "@mui/material";
-import { MyContext } from "../../App";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
 
 type OTPBoxProps = {
   length: number;
@@ -16,9 +13,6 @@ const OTPBox = (props: OTPBoxProps) => {
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const context = useContext(MyContext);
-  const navigate = useNavigate();
-
   useEffect(() => {
     onChange?.(otp.join(""));
   }, [otp, onChange]);
@@ -64,25 +58,12 @@ const OTPBox = (props: OTPBoxProps) => {
     inputRefs.current[Math.min(pasted.length, length - 1)]?.focus();
   };
 
-  const handleSubmit = () => {
-    const otpValue = otp.join("");
-    if (otpValue.length < length) {
-      context.error(`Please enter all ${length} digits`);
-      return;
-    }
-    context.success("OTP Verified Successfully!");
-    setTimeout(() => navigate("/forgot-password"), 1500);
-  };
-
   const handleResend = () => {
-    setOtp(["", "", "", "", "", ""]);
+    setOtp(Array.from({ length }, () => ""));
     setTimer(30);
     setCanResend(false);
     inputRefs.current[0]?.focus();
-    context.success("OTP resent to your email!");
   };
-
-  const isComplete = otp.every((d) => d !== "");
 
   return (
     <div className="flex flex-col items-center gap-6 py-4">
@@ -94,7 +75,10 @@ const OTPBox = (props: OTPBoxProps) => {
       </p>
 
       {/* OTP Inputs */}
-      <div className="flex gap-3 justify-center" onPaste={handlePaste}>
+      <div
+        className="flex gap-1.5 sm:gap-3 justify-center w-full"
+        onPaste={handlePaste}
+      >
         {otp.map((digit, index) => (
           <input
             key={index}
@@ -107,13 +91,11 @@ const OTPBox = (props: OTPBoxProps) => {
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
+            className="w-[38px] h-[46px] sm:w-[48px] sm:h-[52px] text-[18px] sm:text-[22px]"
             style={{
-              width: "48px",
-              height: "52px",
               border: digit ? "2px solid #ff5252" : "2px solid #e0e0e0",
               borderRadius: "10px",
               textAlign: "center",
-              fontSize: "22px",
               fontWeight: "700",
               color: "#333",
               outline: "none",
@@ -157,30 +139,6 @@ const OTPBox = (props: OTPBoxProps) => {
         )}
       </div>
 
-      {/* Verify Button */}
-      <Button
-        onClick={handleSubmit}
-        disabled={!isComplete}
-        className="w-full !py-3 !text-[15px] !font-bold !rounded-lg !text-white !normal-case"
-        style={{
-          background: isComplete
-            ? "linear-gradient(135deg, #ff5252, #ff1744)"
-            : "#e0e0e0",
-          color: isComplete ? "#fff" : "#aaa",
-          boxShadow: isComplete ? "0 4px 15px rgba(255,82,82,0.4)" : "none",
-          transition: "all 0.3s ease",
-        }}
-      >
-        Verify OTP
-      </Button>
-
-      {/* Back to login */}
-      <button
-        onClick={() => navigate("/login")}
-        className="text-[13px] text-gray-400 hover:text-[#ff5252] cursor-pointer bg-transparent border-none transition-colors"
-      >
-        ← Back to Login
-      </button>
     </div>
   );
 };

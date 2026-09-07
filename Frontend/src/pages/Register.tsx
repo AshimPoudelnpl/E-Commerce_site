@@ -1,4 +1,5 @@
 import { Button, TextField } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
@@ -6,11 +7,12 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { postData } from "../utils/api";
-import { MyContext } from "../App";
+import { MyContext } from "../context/MyContext";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const context = useContext(MyContext);
   const navigate = useNavigate();
@@ -29,47 +31,73 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     if (formFields.name === "") {
-      context.alertBox({
+      context?.alertBox?.({
         type: "error",
         msg: "Please Enter full name",
       });
       return false;
     }
     if (formFields.email === "") {
-      context.alertBox({
+      context?.alertBox?.({
         type: "error",
         msg: "Please Enter email",
       });
       return false;
     }
     if (formFields.password === "") {
-      context.alertBox({
+      context?.alertBox?.({
         type: "error",
         msg: "Please Enter password",
       });
       return false;
     }
     if (formFields.confirmPassword === "") {
-      context.alertBox({
+      context?.alertBox?.({
         type: "error",
         msg: "Please Enter confirm password",
       });
       return false;
     }
-    {
-      postData("/api/user/register", formFields).then((res) => {
+
+    setIsLoading(true);
+    postData("/api/user/register", formFields)
+      .then((res) => {
         console.log(res);
+        if (res?.success == true) {
+          setIsLoading(false);
+          context.alertBox({
+            type: "success",
+            msg: res?.message,
+          });
+          localStorage.setItem("userEmail", formFields.email);
+          setFormFields({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          });
+          navigate("/verify", { state: { email: formFields.email } });
+        } else {
+          context.alertBox({
+            type: "error",
+            msg: res?.message,
+          });
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
       });
-    }
   };
 
   return (
-    <section className="section py-10">
+    <section className="section py-6 md:py-10 px-3">
       <div className="container">
-        <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
-          <h3 className="text-center text-[18px] p-4 font-bold">
+        <div className="card shadow-md w-full max-w-[500px] m-auto rounded-md bg-white p-4 sm:p-5 px-4 sm:px-10">
+          <h3 className="text-center text-[18px] p-2 sm:p-4 font-bold">
             Create an Account
           </h3>
 
@@ -138,12 +166,23 @@ const Register = () => {
               </Button>
             </div>
 
+            {/* Sign Up Button */}
             <div className="flex items-center w-full mt-3 mb-3">
               <Button
                 type="submit"
-                className="btn-org btn-lg w-full !bg-[#ff5252] font-bold !text-white"
+                disabled={isLoading}
+                className={`btn-org btn-lg w-full font-bold !text-white flex items-center justify-center gap-2 ${
+                  isLoading ? "!bg-gray-500" : "!bg-[#ff5252]"
+                }`}
               >
-                Sign Up
+                {isLoading ? (
+                  <>
+                    <CircularProgress size={22} color="inherit" />
+                    <span>Signing Up...</span>
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
             </div>
 

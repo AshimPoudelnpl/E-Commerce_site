@@ -296,6 +296,9 @@ export async function deleteCategory(request, response) {
       });
     }
 
+    // delete all subcategories that belong to this parent
+    await CategoryModel.deleteMany({ parentId: request.params.id });
+
     return response.status(200).json({
       message: "Category deleted successfully",
       error: false,
@@ -328,8 +331,8 @@ export async function updateCategory(request, response) {
 
     if (name) category.name = name;
     if (color) category.color = color;
-    if (parentId) category.parentId = parentId;
-    if (parentCatName) category.parentCatName = parentCatName;
+    category.parentId = parentId ?? category.parentId;
+    category.parentCatName = parentCatName ?? category.parentCatName;
     if (status) category.status = status;
 
     if (image || images) {

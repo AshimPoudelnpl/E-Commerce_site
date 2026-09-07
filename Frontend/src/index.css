@@ -45,3 +45,24 @@ nav ul button{text-transform: capitalize !important;  }
 .zoomProductSliderThumbs .swiper-slide{height: auto !important;}
 .btn-org{ background-color:  #ff5252;}
 .cartpanel .MuiPaper-root{ width: 400px ;}
+
+.productSlider {
+  position: relative;
+  padding: 0 36px;
+}
+
+.productSlider .swiper-button-prev,
+.productSlider .swiper-button-next {
+  color: var(--color-primary);
+  background: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.productSlider .swiper-button-prev::after,
+.productSlider .swiper-button-next::after {
+  font-size: 14px;
+  font-weight: 700;
+}

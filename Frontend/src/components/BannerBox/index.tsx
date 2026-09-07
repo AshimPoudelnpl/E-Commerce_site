@@ -1,11 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function BannerBox(props: { img: string }) {
+function BannerBox(props: { img: string; link?: string }) {
   return (
-    <div className="bannerBox w-full h-full rounded-lg overflow-hidden">
-      <Link to="/">
-        <img src={props.img} className="w-full transition-all group-hover:scale-105 group-hover:rotate-2" alt="banner" />
+    <div className="bannerBox w-full rounded-lg overflow-hidden group">
+      <Link to={props.link ?? "/"}>
+        <img
+          src={props.img}
+          className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:rotate-1"
+          alt="banner"
+        />
       </Link>
     </div>
   );

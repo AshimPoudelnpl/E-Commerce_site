@@ -40,28 +40,28 @@ function Footer() {
       <footer className="py-6 bg-white border border-[rgba(0,0,0,0.1)]">
         <div className="container">
           {/* Top Icons Row */}
-          <div className="flex items-center justify-center gap-2 pb-5">
-            <div className="col flex items-center justify-center flex-col group w-1/5">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pb-5">
+            <div className="col flex items-center justify-center flex-col group">
               <LiaShippingFastSolid className="text-[35px] transition-all duration-300 group-hover:text-primary group-hover:-translate-y-1" />
               <h3 className="text-[14px] font-[600] mt-2">Free Shipping</h3>
               <p className="text-[11px] font-[500]">For all Orders Over $100</p>
             </div>
-            <div className="col flex items-center justify-center flex-col group w-1/5">
+            <div className="col flex items-center justify-center flex-col group">
               <LiaUndoAltSolid className="text-[35px] transition-all duration-300 group-hover:text-primary group-hover:-translate-y-1" />
               <h3 className="text-[14px] font-[600] mt-2">30 Days Returns</h3>
               <p className="text-[11px] font-[500]">For an Exchange Product</p>
             </div>
-            <div className="col flex items-center justify-center flex-col group w-1/5">
+            <div className="col flex items-center justify-center flex-col group">
               <LiaWalletSolid className="text-[35px] transition-all duration-300 group-hover:text-primary group-hover:-translate-y-1" />
               <h3 className="text-[14px] font-[600] mt-2">Secured Payment</h3>
               <p className="text-[11px] font-[500]">Payment Cards Accepted</p>
             </div>
-            <div className="col flex items-center justify-center flex-col group w-1/5">
+            <div className="col flex items-center justify-center flex-col group">
               <LiaGiftSolid className="text-[35px] transition-all duration-300 group-hover:text-primary group-hover:-translate-y-1" />
               <h3 className="text-[14px] font-[600] mt-2">Special Gifts</h3>
               <p className="text-[11px] font-[500]">Our First Product Order</p>
             </div>
-            <div className="col flex items-center justify-center flex-col group w-1/5">
+            <div className="col flex items-center justify-center flex-col group col-span-2 md:col-span-1">
               <LiaHeadsetSolid className="text-[35px] transition-all duration-300 group-hover:text-primary group-hover:-translate-y-1" />
               <h3 className="text-[14px] font-[600] mt-2">Support 24/7</h3>
               <p className="text-[11px] font-[500]">Contact us Anytime</p>
@@ -71,9 +71,9 @@ function Footer() {
           <hr className="border-[rgba(0,0,0,0.1)]" />
 
           {/* Bottom Columns Row */}
-          <div className="flex items-start divide-x bg-gray-100 divide-[rgba(0,0,0,0.1)] py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 bg-gray-100 gap-6 py-8 px-4">
             {/* Contact */}
-            <div className="part1 w-[28%] pr-10 pl-6">
+            <div className="part1 w-full">
               <h2 className="text-[18px] font-[700] mb-4">Contact Us</h2>
               <p className="text-[14px] font-[400] text-[#374151] leading-6">
                 Classyshop - Mega Super Store
@@ -102,7 +102,7 @@ function Footer() {
             </div>
 
             {/* Products */}
-            <div className="part2 w-[18%] px-8">
+            <div className="part2 w-full">
               <h2 className="text-[18px] font-[700] mb-4">Products</h2>
               <ul>
                 <li className="list-none text-[14px] w-full mb-3">
@@ -139,7 +139,7 @@ function Footer() {
             </div>
 
             {/* Our Company */}
-            <div className="part3 w-[24%] px-8">
+            <div className="part3 w-full">
               <h2 className="text-[18px] font-[700] mb-4">Our Company</h2>
               <ul>
                 <li className="list-none text-[14px] w-full mb-3">
@@ -176,7 +176,7 @@ function Footer() {
             </div>
 
             {/* Newsletter */}
-            <div className="part4 w-[30%] pl-8">
+            <div className="part4 w-full">
               <h2 className="text-[18px] font-[700] mb-4">
                 Subscribe To Newsletter
               </h2>

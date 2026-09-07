@@ -38,12 +38,8 @@ function HomeCatSlider() {
             <SwiperSlide key={index} className="!h-auto">
               <Link to={cat.link}>
                 <div className="item py-7 px-4 flex flex-col items-center justify-center bg-white border border-[#e5e5e5] hover:shadow-md transition">
-                  <span className="text-[42px] leading-none">
-                    {cat.icon}
-                  </span>
-                  <h3 className="text-[13px] font-[500] mt-2">
-                    {cat.name}
-                  </h3>
+                  <span className="text-[42px] leading-none">{cat.icon}</span>
+                  <h3 className="text-[13px] font-[500] mt-2">{cat.name}</h3>
                 </div>
               </Link>
             </SwiperSlide>

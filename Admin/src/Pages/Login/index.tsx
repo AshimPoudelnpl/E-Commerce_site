@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Container,
   FormControlLabel,
   IconButton,
@@ -15,18 +16,69 @@ import { FaFacebook } from "react-icons/fa";
 import { HiOutlineLogin } from "react-icons/hi";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { postData } from "../../utils/api";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your sign-in logic here
-    console.log({ email, password, rememberMe });
+
+    if (!email || !password) {
+      toast.error("Please provide email and password");
+      return;
+    }
+
+    setIsLoading(true);
+    const loadingToastId = toast.loading("Logging in...");
+
+    try {
+      // POST /api/user/login  →  loginController
+      const res = await postData("/api/user/login", { email, password });
+
+      if (res?.success) {
+        // Store tokens returned by loginController
+        localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
+
+        // Optionally persist basic user info
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: res.data._id,
+            name: res.data.name,
+            email: res.data.email,
+            role: res.data.role,
+            avatar: res.data.avatar,
+          }),
+        );
+
+        toast.success(res?.message || "Login successful!", {
+          id: loadingToastId,
+        });
+        navigate("/");
+      } else {
+        toast.error(res?.message || "Login failed. Please try again.", {
+          id: loadingToastId,
+        });
+      }
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      toast.error(
+        axiosError?.response?.data?.message ||
+          "Login failed. Please check your credentials.",
+        { id: loadingToastId },
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,12 +112,14 @@ const Login = () => {
             </Button>
           </Link>
 
-          <Box className="flex items-center gap-1.5 text-gray-800 cursor-pointer">
-            <HiOutlineUser className="text-[16px]" />
-            <Typography className="!text-[13px] !font-semibold">
-              Sign Up
-            </Typography>
-          </Box>
+          <Link to="/sign-up">
+            <Box className="flex items-center gap-1.5 text-gray-800 cursor-pointer">
+              <HiOutlineUser className="text-[16px]" />
+              <Typography className="!text-[13px] !font-semibold">
+                Sign Up
+              </Typography>
+            </Box>
+          </Link>
         </Box>
       </Box>
 
@@ -199,10 +253,22 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
-            className="!bg-blue-600 !capitalize !text-[14px] !font-semibold !py-3 !rounded-md !shadow-none hover:!bg-blue-700"
+            disabled={isLoading}
+            className="!bg-blue-600 !capitalize !text-[14px] !font-semibold !py-3 !rounded-md !shadow-none hover:!bg-blue-700 disabled:!opacity-70"
           >
-            Sign In
+            {isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Sign In"
+            )}
           </Button>
+
+          <Typography className="!text-center !text-[13px] !text-gray-500 !mt-4">
+            Don't have an account?{" "}
+            <Link to="/sign-up" className="text-blue-600 font-semibold">
+              Sign Up
+            </Link>
+          </Typography>
         </Box>
       </Container>
     </Box>

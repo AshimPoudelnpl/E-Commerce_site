@@ -77,59 +77,415 @@ import blog5 from "../assets/BAnner4_files/Banner_image Slider/1783066403324_173
 
 const tabProducts: Record<number, Product[]> = {
   0: [
-    { id: 1, img: f1, img2: f2, name: "Men's Striped Casual Shirt", description: "Slim fit striped casual shirt for men, perfect for daily wear.", price: 499, oldPrice: 999, rating: 4 },
-    { id: 2, img: f2, img2: f1, name: "Men's Slim Fit Shirt", description: "Classic slim fit shirt with a clean look for all occasions.", price: 549, oldPrice: 1099, rating: 4 },
-    { id: 3, img: f3, img2: f4, name: "Women's Top", description: "Stylish and comfortable women's top for casual outings.", price: 399, oldPrice: 799, rating: 3 },
-    { id: 4, img: f4, img2: f3, name: "Women's Casual Top", description: "Lightweight casual top ideal for everyday wear.", price: 349, oldPrice: 699, rating: 4 },
-    { id: 5, img: f5, img2: f6, name: "Ethnic Wear", description: "Beautiful ethnic wear with intricate embroidery detailing.", price: 699, oldPrice: 1299, rating: 5 },
-    { id: 6, img: f6, img2: f5, name: "Women's Cotton Top", description: "Soft cotton blend top in vibrant maroon color.", price: 299, oldPrice: 599, rating: 4 },
-    { id: 7, img: f7, img2: f8, name: "Kurta Pant Dupatta Set", description: "Elegant rayon embroidered kurta pant dupatta set for women.", price: 850, oldPrice: 1500, rating: 5 },
-    { id: 8, img: f8, img2: f7, name: "Girls Lehenga Choli Set", description: "Festive embroidered lehenga choli and dupatta set for girls.", price: 750, oldPrice: 1400, rating: 4 },
+    {
+      id: 1,
+      img: f1,
+      img2: f2,
+      name: "Men's Striped Casual Shirt",
+      description:
+        "Slim fit striped casual shirt for men, perfect for daily wear.",
+      price: 499,
+      oldPrice: 999,
+      rating: 4,
+    },
+    {
+      id: 2,
+      img: f2,
+      img2: f1,
+      name: "Men's Slim Fit Shirt",
+      description:
+        "Classic slim fit shirt with a clean look for all occasions.",
+      price: 549,
+      oldPrice: 1099,
+      rating: 4,
+    },
+    {
+      id: 3,
+      img: f3,
+      img2: f4,
+      name: "Women's Top",
+      description: "Stylish and comfortable women's top for casual outings.",
+      price: 399,
+      oldPrice: 799,
+      rating: 3,
+    },
+    {
+      id: 4,
+      img: f4,
+      img2: f3,
+      name: "Women's Casual Top",
+      description: "Lightweight casual top ideal for everyday wear.",
+      price: 349,
+      oldPrice: 699,
+      rating: 4,
+    },
+    {
+      id: 5,
+      img: f5,
+      img2: f6,
+      name: "Ethnic Wear",
+      description: "Beautiful ethnic wear with intricate embroidery detailing.",
+      price: 699,
+      oldPrice: 1299,
+      rating: 5,
+    },
+    {
+      id: 6,
+      img: f6,
+      img2: f5,
+      name: "Women's Cotton Top",
+      description: "Soft cotton blend top in vibrant maroon color.",
+      price: 299,
+      oldPrice: 599,
+      rating: 4,
+    },
+    {
+      id: 7,
+      img: f7,
+      img2: f8,
+      name: "Kurta Pant Dupatta Set",
+      description:
+        "Elegant rayon embroidered kurta pant dupatta set for women.",
+      price: 850,
+      oldPrice: 1500,
+      rating: 5,
+    },
+    {
+      id: 8,
+      img: f8,
+      img2: f7,
+      name: "Girls Lehenga Choli Set",
+      description:
+        "Festive embroidered lehenga choli and dupatta set for girls.",
+      price: 750,
+      oldPrice: 1400,
+      rating: 4,
+    },
   ],
   1: [
-    { id: 9, img: e1, img2: e2, name: "Vivo Y05", description: "Budget-friendly smartphone with great battery life.", price: 8999, oldPrice: 12999, rating: 4 },
-    { id: 10, img: e2, img2: e1, name: "Samsung S24 Ultra", description: "Flagship Samsung phone with S-Pen and 200MP camera.", price: 89999, oldPrice: 109999, rating: 5 },
-    { id: 11, img: e3, img2: e4, name: "Samsung Galaxy A15", description: "5G-enabled mid-range phone with AMOLED display.", price: 14999, oldPrice: 19999, rating: 4 },
-    { id: 12, img: e4, img2: e5, name: "iPhone 13 Starlight", description: "Apple iPhone 13 with A15 Bionic chip and dual camera.", price: 59999, oldPrice: 79999, rating: 5 },
-    { id: 13, img: e5, img2: e4, name: "iPhone 13 Pink", description: "Apple iPhone 13 in elegant pink color with 128GB storage.", price: 59999, oldPrice: 79999, rating: 5 },
+    {
+      id: 9,
+      img: e1,
+      img2: e2,
+      name: "Vivo Y05",
+      description: "Budget-friendly smartphone with great battery life.",
+      price: 8999,
+      oldPrice: 12999,
+      rating: 4,
+    },
+    {
+      id: 10,
+      img: e2,
+      img2: e1,
+      name: "Samsung S24 Ultra",
+      description: "Flagship Samsung phone with S-Pen and 200MP camera.",
+      price: 89999,
+      oldPrice: 109999,
+      rating: 5,
+    },
+    {
+      id: 11,
+      img: e3,
+      img2: e4,
+      name: "Samsung Galaxy A15",
+      description: "5G-enabled mid-range phone with AMOLED display.",
+      price: 14999,
+      oldPrice: 19999,
+      rating: 4,
+    },
+    {
+      id: 12,
+      img: e4,
+      img2: e5,
+      name: "iPhone 13 Starlight",
+      description: "Apple iPhone 13 with A15 Bionic chip and dual camera.",
+      price: 59999,
+      oldPrice: 79999,
+      rating: 5,
+    },
+    {
+      id: 13,
+      img: e5,
+      img2: e4,
+      name: "iPhone 13 Pink",
+      description: "Apple iPhone 13 in elegant pink color with 128GB storage.",
+      price: 59999,
+      oldPrice: 79999,
+      rating: 5,
+    },
   ],
   2: [
-    { id: 14, img: h1, img2: h2, name: "Kitchen Storage", description: "Durable kitchen storage container for everyday use.", price: 349, oldPrice: 699, rating: 4 },
-    { id: 15, img: h2, img2: h1, name: "Home Decor Item", description: "Elegant home decor piece to brighten your living space.", price: 499, oldPrice: 899, rating: 3 },
-    { id: 16, img: h3, img2: h4, name: "Kitchen Organizer", description: "Space-saving kitchen organizer for a tidy countertop.", price: 299, oldPrice: 599, rating: 4 },
-    { id: 17, img: h4, img2: h3, name: "Home Essential", description: "Must-have home essential for daily household needs.", price: 399, oldPrice: 799, rating: 4 },
+    {
+      id: 14,
+      img: h1,
+      img2: h2,
+      name: "Kitchen Storage",
+      description: "Durable kitchen storage container for everyday use.",
+      price: 349,
+      oldPrice: 699,
+      rating: 4,
+    },
+    {
+      id: 15,
+      img: h2,
+      img2: h1,
+      name: "Home Decor Item",
+      description: "Elegant home decor piece to brighten your living space.",
+      price: 499,
+      oldPrice: 899,
+      rating: 3,
+    },
+    {
+      id: 16,
+      img: h3,
+      img2: h4,
+      name: "Kitchen Organizer",
+      description: "Space-saving kitchen organizer for a tidy countertop.",
+      price: 299,
+      oldPrice: 599,
+      rating: 4,
+    },
+    {
+      id: 17,
+      img: h4,
+      img2: h3,
+      name: "Home Essential",
+      description: "Must-have home essential for daily household needs.",
+      price: 399,
+      oldPrice: 799,
+      rating: 4,
+    },
   ],
   3: [
-    { id: 18, img: b1, img2: b2, name: "Olay Total Effect Cream", description: "7-in-1 anti-aging day cream with SPF 15 protection.", price: 399, oldPrice: 699, rating: 4 },
-    { id: 19, img: b2, img2: b1, name: "Elovera Cream", description: "Moisturizing cream enriched with aloe vera extracts.", price: 199, oldPrice: 399, rating: 4 },
-    { id: 20, img: b3, img2: b4, name: "Nandika Massage Cream", description: "Wine-infused massage cream for deep skin nourishment.", price: 299, oldPrice: 599, rating: 3 },
-    { id: 21, img: b4, img2: b3, name: "Mars HD Foundation", description: "2-in-1 HD foundation for flawless skin coverage.", price: 249, oldPrice: 499, rating: 4 },
-    { id: 22, img: b5, img2: b1, name: "Dr Batra Shower Gel", description: "Natural shower gel enriched with olive extract.", price: 349, oldPrice: 649, rating: 5 },
+    {
+      id: 18,
+      img: b1,
+      img2: b2,
+      name: "Olay Total Effect Cream",
+      description: "7-in-1 anti-aging day cream with SPF 15 protection.",
+      price: 399,
+      oldPrice: 699,
+      rating: 4,
+    },
+    {
+      id: 19,
+      img: b2,
+      img2: b1,
+      name: "Elovera Cream",
+      description: "Moisturizing cream enriched with aloe vera extracts.",
+      price: 199,
+      oldPrice: 399,
+      rating: 4,
+    },
+    {
+      id: 20,
+      img: b3,
+      img2: b4,
+      name: "Nandika Massage Cream",
+      description: "Wine-infused massage cream for deep skin nourishment.",
+      price: 299,
+      oldPrice: 599,
+      rating: 3,
+    },
+    {
+      id: 21,
+      img: b4,
+      img2: b3,
+      name: "Mars HD Foundation",
+      description: "2-in-1 HD foundation for flawless skin coverage.",
+      price: 249,
+      oldPrice: 499,
+      rating: 4,
+    },
+    {
+      id: 22,
+      img: b5,
+      img2: b1,
+      name: "Dr Batra Shower Gel",
+      description: "Natural shower gel enriched with olive extract.",
+      price: 349,
+      oldPrice: 649,
+      rating: 5,
+    },
   ],
   4: [
-    { id: 23, img: bg1, img2: bg2, name: "Grey Handheld Bag", description: "Stylish grey PU handheld bag for women.", price: 599, oldPrice: 1099, rating: 4 },
-    { id: 24, img: bg2, img2: bg1, name: "Black Handheld Bag", description: "Elegant black PU handheld bag for all occasions.", price: 649, oldPrice: 1199, rating: 4 },
-    { id: 25, img: bg3, img2: bg4, name: "Waterproof Backpack", description: "36L waterproof school and college backpack.", price: 799, oldPrice: 1499, rating: 5 },
-    { id: 26, img: bg4, img2: bg3, name: "Dome Satchel Brown", description: "Medium dome satchel in classic brown color.", price: 899, oldPrice: 1699, rating: 4 },
-    { id: 27, img: bg5, img2: bg1, name: "Laptop Backpack", description: "Green polyester laptop backpack with multiple compartments.", price: 999, oldPrice: 1899, rating: 4 },
+    {
+      id: 23,
+      img: bg1,
+      img2: bg2,
+      name: "Grey Handheld Bag",
+      description: "Stylish grey PU handheld bag for women.",
+      price: 599,
+      oldPrice: 1099,
+      rating: 4,
+    },
+    {
+      id: 24,
+      img: bg2,
+      img2: bg1,
+      name: "Black Handheld Bag",
+      description: "Elegant black PU handheld bag for all occasions.",
+      price: 649,
+      oldPrice: 1199,
+      rating: 4,
+    },
+    {
+      id: 25,
+      img: bg3,
+      img2: bg4,
+      name: "Waterproof Backpack",
+      description: "36L waterproof school and college backpack.",
+      price: 799,
+      oldPrice: 1499,
+      rating: 5,
+    },
+    {
+      id: 26,
+      img: bg4,
+      img2: bg3,
+      name: "Dome Satchel Brown",
+      description: "Medium dome satchel in classic brown color.",
+      price: 899,
+      oldPrice: 1699,
+      rating: 4,
+    },
+    {
+      id: 27,
+      img: bg5,
+      img2: bg1,
+      name: "Laptop Backpack",
+      description:
+        "Green polyester laptop backpack with multiple compartments.",
+      price: 999,
+      oldPrice: 1899,
+      rating: 4,
+    },
   ],
   5: [
-    { id: 28, img: s1, img2: s2, name: "Asteroid Suede Sneakers", description: "Colourblocked suede sneakers for men.", price: 999, oldPrice: 1999, rating: 4 },
-    { id: 29, img: s2, img2: s1, name: "Casual Shoes", description: "Comfortable casual shoes for everyday wear.", price: 699, oldPrice: 1299, rating: 4 },
-    { id: 30, img: s3, img2: s4, name: "White Sneakers Women", description: "Lightweight white sneakers for women and girls.", price: 599, oldPrice: 1099, rating: 5 },
-    { id: 31, img: s4, img2: s3, name: "Kids Sports Shoes", description: "Comfortable blue sports shoes for kids.", price: 499, oldPrice: 899, rating: 4 },
+    {
+      id: 28,
+      img: s1,
+      img2: s2,
+      name: "Asteroid Suede Sneakers",
+      description: "Colourblocked suede sneakers for men.",
+      price: 999,
+      oldPrice: 1999,
+      rating: 4,
+    },
+    {
+      id: 29,
+      img: s2,
+      img2: s1,
+      name: "Casual Shoes",
+      description: "Comfortable casual shoes for everyday wear.",
+      price: 699,
+      oldPrice: 1299,
+      rating: 4,
+    },
+    {
+      id: 30,
+      img: s3,
+      img2: s4,
+      name: "White Sneakers Women",
+      description: "Lightweight white sneakers for women and girls.",
+      price: 599,
+      oldPrice: 1099,
+      rating: 5,
+    },
+    {
+      id: 31,
+      img: s4,
+      img2: s3,
+      name: "Kids Sports Shoes",
+      description: "Comfortable blue sports shoes for kids.",
+      price: 499,
+      oldPrice: 899,
+      rating: 4,
+    },
   ],
   6: [
-    { id: 32, img: sd1, img2: sd2, name: "Women Flip Flops Blue", description: "Daily use flip flops with ortho comfort sole.", price: 199, oldPrice: 399, rating: 3 },
-    { id: 33, img: sd2, img2: sd1, name: "Aqualite Black Sandals", description: "Stylish black casual sandals for women.", price: 249, oldPrice: 499, rating: 4 },
-    { id: 34, img: sd3, img2: sd4, name: "Orange Flip Flops", description: "Trendy orange flip flops for women.", price: 179, oldPrice: 349, rating: 4 },
-    { id: 35, img: sd4, img2: sd3, name: "Paragon Women Sandals", description: "Comfortable and durable sandals for daily wear.", price: 299, oldPrice: 599, rating: 5 },
+    {
+      id: 32,
+      img: sd1,
+      img2: sd2,
+      name: "Women Flip Flops Blue",
+      description: "Daily use flip flops with ortho comfort sole.",
+      price: 199,
+      oldPrice: 399,
+      rating: 3,
+    },
+    {
+      id: 33,
+      img: sd2,
+      img2: sd1,
+      name: "Aqualite Black Sandals",
+      description: "Stylish black casual sandals for women.",
+      price: 249,
+      oldPrice: 499,
+      rating: 4,
+    },
+    {
+      id: 34,
+      img: sd3,
+      img2: sd4,
+      name: "Orange Flip Flops",
+      description: "Trendy orange flip flops for women.",
+      price: 179,
+      oldPrice: 349,
+      rating: 4,
+    },
+    {
+      id: 35,
+      img: sd4,
+      img2: sd3,
+      name: "Paragon Women Sandals",
+      description: "Comfortable and durable sandals for daily wear.",
+      price: 299,
+      oldPrice: 599,
+      rating: 5,
+    },
   ],
   7: [
-    { id: 36, img: j1, img2: j2, name: "Kundan Earring Set", description: "Festive kundan earring set for women and girls.", price: 199, oldPrice: 399, rating: 4 },
-    { id: 37, img: j2, img2: j1, name: "Gold Plated Stud Combo", description: "Set of 2 pairs of gold plated temple stud earrings.", price: 299, oldPrice: 599, rating: 5 },
-    { id: 38, img: j3, img2: j4, name: "Gold Drop Earrings", description: "Elegant gold plated drop earrings for women.", price: 249, oldPrice: 499, rating: 4 },
-    { id: 39, img: j4, img2: j3, name: "Silver Petal Ring", description: "Sterling silver adjustable wine twirling petal ring.", price: 349, oldPrice: 699, rating: 5 },
+    {
+      id: 36,
+      img: j1,
+      img2: j2,
+      name: "Kundan Earring Set",
+      description: "Festive kundan earring set for women and girls.",
+      price: 199,
+      oldPrice: 399,
+      rating: 4,
+    },
+    {
+      id: 37,
+      img: j2,
+      img2: j1,
+      name: "Gold Plated Stud Combo",
+      description: "Set of 2 pairs of gold plated temple stud earrings.",
+      price: 299,
+      oldPrice: 599,
+      rating: 5,
+    },
+    {
+      id: 38,
+      img: j3,
+      img2: j4,
+      name: "Gold Drop Earrings",
+      description: "Elegant gold plated drop earrings for women.",
+      price: 249,
+      oldPrice: 499,
+      rating: 4,
+    },
+    {
+      id: 39,
+      img: j4,
+      img2: j3,
+      name: "Silver Petal Ring",
+      description: "Sterling silver adjustable wine twirling petal ring.",
+      price: 349,
+      oldPrice: 699,
+      rating: 5,
+    },
   ],
 };
 
@@ -175,6 +531,7 @@ function Home() {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    console.log(_event.target);
     setValue(newValue);
   };
 
@@ -186,7 +543,7 @@ function Home() {
       {/* Popular Products */}
       <section className="py-6 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-3">
             <div className="leftSec">
               <h2 className="text-[22px] font-bold text-[#1f2937]">
                 Popular Products
@@ -195,7 +552,7 @@ function Home() {
                 Do not miss the current offers until the end of March.
               </p>
             </div>
-            <div className="rightSec w-[70%]">
+            <div className="rightSec w-full md:w-[70%]">
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -232,7 +589,7 @@ function Home() {
           ))}
 
           {/* Free Shipping */}
-          <div className="freeShipping w-full py-3 px-6 border border-[#e2b8a6] flex items-center justify-between rounded-md my-4">
+          <div className="freeShipping w-full py-3 px-4 md:px-6 border border-[#e2b8a6] flex flex-col md:flex-row items-center justify-between rounded-md my-4 gap-2 text-center md:text-left">
             <div className="col1 flex items-center gap-4">
               <LiaShippingFastSolid className="text-[50px]" />
               <span className="text-[20px] font-[600]">Free Shipping</span>
@@ -264,29 +621,62 @@ function Home() {
           <ProductSlider items={6} />
           <div className="mt-4">
             <AdsBannerSlider items={4} />
-            
           </div>
         </div>
       </section>
 
       {/* Blog Section Directly Attached Below Banners */}
       <section className="py-16 bg-white border-t border-[#f1f1f1]">
-        <div className="container mx-auto px-4 w-full"> 
+        <div className="container mx-auto px-4 w-full">
           <h2 className="text-[22px] font-bold text-[#1f2937] mb-4">
             From the Blog
           </h2>
           <Swiper
-            slidesPerView={3}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
             spaceBetween={10}
             navigation={true}
             modules={[Navigation]}
             className="blogSlider"
           >
-            <SwiperSlide><BlogItem image={blog1} title="Top Fashion Trends 2024" date="5 APRIL, 2024" /></SwiperSlide>
-            <SwiperSlide><BlogItem image={blog2} title="Best Electronics Deals" date="12 MAY, 2024" /></SwiperSlide>
-            <SwiperSlide><BlogItem image={blog3} title="Home Decor Ideas" date="20 JUNE, 2024" /></SwiperSlide>
-            <SwiperSlide><BlogItem image={blog4} title="Beauty Tips & Tricks" date="8 JULY, 2024" /></SwiperSlide>
-            <SwiperSlide><BlogItem image={blog5} title="Summer Collection 2024" date="15 AUG, 2024" /></SwiperSlide>
+            <SwiperSlide>
+              <BlogItem
+                image={blog1}
+                title="Top Fashion Trends 2024"
+                date="5 APRIL, 2024"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <BlogItem
+                image={blog2}
+                title="Best Electronics Deals"
+                date="12 MAY, 2024"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <BlogItem
+                image={blog3}
+                title="Home Decor Ideas"
+                date="20 JUNE, 2024"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <BlogItem
+                image={blog4}
+                title="Beauty Tips & Tricks"
+                date="8 JULY, 2024"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <BlogItem
+                image={blog5}
+                title="Summer Collection 2024"
+                date="15 AUG, 2024"
+              />
+            </SwiperSlide>
           </Swiper>
         </div>
       </section>

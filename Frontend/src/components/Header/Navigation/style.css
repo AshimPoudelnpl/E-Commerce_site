@@ -9,7 +9,7 @@
   z-index: 50;
 }
 
-/* Top-level: show Fashion's submenu on hover of its <li> */
+/* Show a category's subcategories when the category is hovered. */
 li.relative:hover > .submenu {
   display: block;
 }
@@ -28,4 +28,13 @@ li.relative:hover > .submenu {
 /* Show nested submenu only when hovering its specific parent <li> */
 .submenu li:hover > .submenu {
   display: block;
+}
+
+/* Hide scrollbar on mobile category list */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
