@@ -15,13 +15,18 @@ export const sanitizeCartForFirestore = (cart: CartItem[]): CartItem[] => {
       id: Number(item.product?.id || item.productId),
       name: item.product?.name || "Product",
       price: Number(item.product?.price || item.price),
-      oldPrice: item.product?.oldPrice ? Number(item.product.oldPrice) : undefined,
-      discount: item.product?.discount ? Number(item.product.discount) : undefined,
+      oldPrice: Number(
+        item.product?.oldPrice || item.product?.price || item.price,
+      ),
+      category: item.product?.category || "General",
+      categorySlug: item.product?.categorySlug || "general",
       rating: item.product?.rating ? Number(item.product.rating) : 5,
-      ratingCount: item.product?.ratingCount ? Number(item.product.ratingCount) : 1,
+      reviewsCount: item.product?.reviewsCount
+        ? Number(item.product.reviewsCount)
+        : 0,
+      countInStock: Number(item.product?.countInStock ?? 1),
+      description: item.product?.description || "",
       brand: item.product?.brand || "Brand",
-      catName: item.product?.catName || "General",
-      inStock: item.product?.inStock !== false,
       img: item.product?.img || "",
       images: Array.isArray(item.product?.images) ? item.product.images : [],
     },
@@ -31,7 +36,10 @@ export const sanitizeCartForFirestore = (cart: CartItem[]): CartItem[] => {
 /**
  * Merges local cart with remote Firestore cart so no items are lost across devices
  */
-export const mergeCarts = (localCart: CartItem[], remoteCart: CartItem[]): CartItem[] => {
+export const mergeCarts = (
+  localCart: CartItem[],
+  remoteCart: CartItem[],
+): CartItem[] => {
   if (!remoteCart || remoteCart.length === 0) return localCart;
   if (!localCart || localCart.length === 0) return remoteCart;
 
@@ -65,7 +73,7 @@ export const mergeCarts = (localCart: CartItem[], remoteCart: CartItem[]): CartI
 export const saveCartToFirestore = async (
   userId: string,
   cart: CartItem[],
-  userProfile?: Partial<UserType>
+  userProfile?: Partial<UserType>,
 ): Promise<void> => {
   if (!userId) return;
 
@@ -84,7 +92,7 @@ export const saveCartToFirestore = async (
         cartCount: sanitizedCart.reduce((sum, item) => sum + item.quantity, 0),
         updatedAt: new Date().toISOString(),
       },
-      { merge: true }
+      { merge: true },
     );
   } catch (error) {
     console.warn("Failed to sync cart to Firestore:", error);
@@ -95,7 +103,7 @@ export const saveCartToFirestore = async (
  * Loads the cart from the user profile document in Firestore
  */
 export const fetchUserCartFromFirestore = async (
-  userId: string
+  userId: string,
 ): Promise<CartItem[] | null> => {
   if (!userId) return null;
 
@@ -122,7 +130,7 @@ export const fetchUserCartFromFirestore = async (
  */
 export const listenToUserCart = (
   userId: string,
-  onRemoteUpdate: (cart: CartItem[]) => void
+  onRemoteUpdate: (cart: CartItem[]) => void,
 ): (() => void) => {
   if (!userId) return () => {};
 
@@ -145,7 +153,7 @@ export const listenToUserCart = (
       },
       (error) => {
         console.warn("Real-time cart listener error:", error);
-      }
+      },
     );
 
     return unsubscribe;
