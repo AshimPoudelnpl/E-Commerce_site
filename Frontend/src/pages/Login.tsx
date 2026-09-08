@@ -7,12 +7,47 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { postData } from "../utils/api";
 import { MyContext } from "../context/MyContext";
+import { signInWithGoogle } from "../firebase/config";
 
 const Login = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const context = useContext(MyContext);
   const navigate = useNavigate();
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const res = await signInWithGoogle();
+      if (res.success && res.user) {
+        localStorage.setItem("token", res.token || "google-token");
+        localStorage.setItem("userEmail", res.user.email);
+        localStorage.setItem("userName", res.user.name);
+        if (res.user.uid) {
+          localStorage.setItem("userUid", res.user.uid);
+        }
+        if (res.user.avatar) {
+          localStorage.setItem("userAvatar", res.user.avatar);
+        }
+        context.setUser({
+          uid: res.user.uid,
+          name: res.user.name,
+          email: res.user.email,
+          avatar: res.user.avatar,
+        });
+        context.setIsLogin(true);
+        context.alertBox({ type: "success", msg: `Welcome ${res.user.name}!` });
+        navigate("/");
+      } else {
+        context.alertBox({ type: "error", msg: res.message || "Google sign-in failed" });
+      }
+    } catch (err: any) {
+      context.alertBox({ type: "error", msg: err?.message || "Google sign-in failed" });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
 
   const [formFields, setFormFields] = useState({
     email: "",
@@ -139,9 +174,23 @@ const Login = () => {
               Or continue with social account
             </p>
 
-            <Button className="flex gap-3 w-full text-[20px] !bg-[#f1f1f1] btn-lg !text-black !font-bold">
-              <FcGoogle className="text-[20px]" />
-              Login with Google
+            <Button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={isGoogleLoading}
+              className="flex items-center justify-center gap-3 w-full text-[15px] sm:text-[16px] !bg-[#f1f1f1] hover:!bg-[#e5e5e5] btn-lg !text-black !font-semibold transition-all py-2.5 rounded-md"
+            >
+              {isGoogleLoading ? (
+                <>
+                  <CircularProgress size={20} color="inherit" />
+                  <span>Connecting to Google...</span>
+                </>
+              ) : (
+                <>
+                  <FcGoogle className="text-[22px]" />
+                  <span>Login with Google</span>
+                </>
+              )}
             </Button>
           </form>
         </div>

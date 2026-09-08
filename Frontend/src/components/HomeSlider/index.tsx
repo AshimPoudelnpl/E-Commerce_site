@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -69,9 +70,9 @@ function HomeSlider() {
                     {slide.price}
                   </span>
                 </p>
-                <button className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs tracking-wide px-7 py-3 rounded transition-colors">
+                <Link to="/products" className="inline-block bg-red-500 hover:bg-red-600 text-white font-bold text-xs tracking-wide px-7 py-3 rounded transition-colors">
                   SHOP NOW
-                </button>
+                </Link>
               </div>
             </div>
           </SwiperSlide>

@@ -1,0 +1,19 @@
+{
+  "name": "e-commerce-site-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@11.14.1",
+  "workspaces": [
+    "Frontend",
+    "Admin",
+    "Backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=Frontend",
+    "build": "npm run build --workspace=Frontend",
+    "lint": "npm run lint --workspace=Frontend"
+  },
+  "dependencies": {
+    "firebase": "^12.18.0"
+  }
+}

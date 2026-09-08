@@ -31,21 +31,22 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    postData("/api/user/logout", {})
-      .then((res) => {
-        console.log(res);
-        localStorage.removeItem("token");
-        localStorage.removeItem("userEmail");
-        context.setIsLogin(false);
-        context.alertBox({ type: "success", msg: "Logged out successfully" });
-        navigate("/login");
-      })
-      .catch(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userEmail");
-        context.setIsLogin(false);
-        navigate("/login");
+    try {
+      import("../../firebase/config").then(({ auth }) => {
+        auth.signOut().catch(() => {});
       });
+    } catch {
+      // ignore
+    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userAvatar");
+    localStorage.removeItem("userUid");
+    context.setUser(null);
+    context.setIsLogin(false);
+    context.alertBox({ type: "success", msg: "Logged out successfully" });
+    navigate("/login");
   };
 
   return (
@@ -228,9 +229,17 @@ function Header() {
               {/* Compare Icon */}
               <li className="list-none hidden md:block">
                 <Tooltip title="Compare">
-                  <IconButton aria-label="compare" size="small">
-                    <Badge badgeContent={4} color="secondary">
-                      <IoIosGitCompare />
+                  <IconButton
+                    aria-label="compare"
+                    size="small"
+                    onClick={() => navigate("/products")}
+                  >
+                    <Badge
+                      badgeContent={context.compareList?.length || 0}
+                      color="secondary"
+                      sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff5252" } }}
+                    >
+                      <IoIosGitCompare className="text-[20px]" />
                     </Badge>
                   </IconButton>
                 </Tooltip>
@@ -239,9 +248,17 @@ function Header() {
               {/* Wishlist Icon */}
               <li className="list-none hidden md:block">
                 <Tooltip title="Wishlist">
-                  <IconButton aria-label="wishlist" size="small">
-                    <Badge badgeContent={4} color="secondary">
-                      <TiHeartOutline />
+                  <IconButton
+                    aria-label="wishlist"
+                    size="small"
+                    onClick={() => navigate("/my-list")}
+                  >
+                    <Badge
+                      badgeContent={context.wishlist?.length || 0}
+                      color="secondary"
+                      sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff5252" } }}
+                    >
+                      <TiHeartOutline className="text-[22px]" />
                     </Badge>
                   </IconButton>
                 </Tooltip>
@@ -255,8 +272,12 @@ function Header() {
                     onClick={() => context.setCartOpen(true)}
                     size="small"
                   >
-                    <Badge badgeContent={4} color="secondary">
-                      <MdShoppingCartCheckout />
+                    <Badge
+                      badgeContent={context.cart?.reduce((sum, item) => sum + item.quantity, 0) || 0}
+                      color="secondary"
+                      sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff5252" } }}
+                    >
+                      <MdShoppingCartCheckout className="text-[22px]" />
                     </Badge>
                   </IconButton>
                 </Tooltip>

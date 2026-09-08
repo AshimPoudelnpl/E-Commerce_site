@@ -1,11 +1,8 @@
 import axios from "axios";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL || "";
 
-export const postData = async (
-  url: string,
-  formData?: Record<string, unknown>,
-) => {
+export const postData = async (url: string, formData?: Record<string, unknown>) => {
   try {
     const response = await axios.post(apiUrl + url, formData, {
       headers: {
@@ -20,12 +17,9 @@ export const postData = async (
   }
 };
 
-export const putData = async (
-  url: string,
-  data: Record<string, unknown> = {},
-) => {
+export const putData = async (url: string, data?: Record<string, unknown>) => {
   try {
-    const response = await axios.put(apiUrl + url, data, {
+    const response = await axios.put(apiUrl + url, data || {}, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",

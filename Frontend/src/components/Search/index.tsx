@@ -1,41 +1,44 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "../Search/style.css";
 import Button from "@mui/material/Button";
 import { CiSearch } from "react-icons/ci";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../context/MyContext";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const context = useContext(MyContext);
 
-  const submitSearch = () => {
-    const value = query.trim();
-    navigate(
-      value
-        ? `/productDetails?search=${encodeURIComponent(value)}`
-        : "/productDetails",
-    );
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      if (context.setSearchQuery) {
+        context.setSearchQuery(searchTerm.trim());
+      }
+      navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
   };
 
   return (
-    <div className="searchBox w-[100%] h-[50px] bg-[#e5e5e5] rounded-[5px] relative p-2">
+    <form
+      onSubmit={handleSearch}
+      className="searchBox w-[100%] h-[50px] bg-[#e5e5e5] rounded-[5px] relative p-2 flex items-center"
+    >
       <input
         type="text"
-        placeholder="Search for products ..."
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        onKeyDown={(event) => event.key === "Enter" && submitSearch()}
-        className="w-full h-[35px] focus:outline-none bg-inherit p-2 text-[15px]"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search for products, brands, or categories..."
+        className="w-full h-[35px] focus:outline-none bg-inherit p-2 text-[14px] sm:text-[15px] pr-10"
       />
       <Button
-        onClick={submitSearch}
-        aria-label="Search"
-        className="!absolute top-[8px] right-[5px] z-50 !w-[35px] !min-w[35px] h-[35px] !rounded-full !text-black"
+        type="submit"
+        className="!absolute top-[8px] right-[5px] z-20 !w-[35px] !min-w-[35px] h-[35px] !rounded-full !text-black hover:!bg-gray-200"
       >
         <CiSearch className="text-black text-[22px]" />
       </Button>
-    </div>
+    </form>
   );
 };
 

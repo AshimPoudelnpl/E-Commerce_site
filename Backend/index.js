@@ -50,8 +50,28 @@ app.use("/api/mylist", myListRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/productSpecs", productSpecsRouter);
 
+app.use((err, req, res, next) => {
+  if (
+    err.name === "MongooseError" ||
+    err.name === "MongoNetworkError" ||
+    (err.message && err.message.includes("buffering timed out"))
+  ) {
+    console.warn("[AI Studio] Database offline — returning mock empty response");
+    if (req.method === "GET") {
+      return res.json(
+        req.path.endsWith("s") || req.path.endsWith("s/") ? [] : {}
+      );
+    }
+    return res
+      .status(503)
+      .json({ error: "Service temporarily unavailable (database offline)" });
+  }
+  next(err);
+});
+
 ConnectDB().then(() => {
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is Running in ${process.env.PORT}`);
+  const PORT = Number(process.env.PORT) || 3000;
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is Running on port ${PORT}`);
   });
 });

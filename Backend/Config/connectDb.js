@@ -2,18 +2,18 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-if (!process.env.MONGODB_URI) {
-  throw new Error("please aprovide the MOngo-db URI in the .env file");
-}
+mongoose.set("bufferCommands", false);
+
 async function ConnectDB() {
+  if (!process.env.MONGODB_URI) {
+    console.warn("[AI Studio] MONGODB_URI not provided — database offline");
+    return;
+  }
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connect to the Database");
+    console.log("Connected to the Database");
   } catch (error) {
-    console.log(error);
-
-    console.log("MongoDb connect error");
-    process.exit(1);
+    console.warn("[AI Studio] MongoDB not connected — offline mode active:", error.message);
   }
 }
 export default ConnectDB;
