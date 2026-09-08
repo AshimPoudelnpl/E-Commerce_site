@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import tShirtImage from "../../assets/4284_plain_t-shirt_2048x2048_85d.webp";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { Badge } from "@mui/material";
 
 const mockOrders = [
   {
@@ -114,8 +113,7 @@ const Orders = () => {
                   <td className="px-4 py-4 text-gray-600 whitespace-pre-line">
                     {order.address}
                   </td>
-                  <td className="px-4 py-4">
-                  </td>
+                  <td className="px-4 py-4"></td>
                 </tr>
 
                 {/* Collapsible Product Details Row */}

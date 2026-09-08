@@ -1,11 +1,33 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box, Button, Checkbox, CircularProgress, IconButton, MenuItem,
-  Paper, Select, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Typography,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
 } from "@mui/material";
-import { MdAdd, MdClose, MdCloudUpload, MdDelete, MdEdit } from "react-icons/md";
-import { deleteData, getData, postData, postUpload, putData } from "../../utils/api";
+import {
+  MdAdd,
+  MdClose,
+  MdCloudUpload,
+  MdDelete,
+  MdEdit,
+} from "react-icons/md";
+import {
+  deleteData,
+  getData,
+  postData,
+  postUpload,
+  putData,
+} from "../../utils/api";
 
 interface Category {
   _id: string;
@@ -17,8 +39,21 @@ interface Category {
   status: string;
 }
 
-const emptySubForm = { name: "", parentId: "", status: "Active", image: "", color: "#000000" };
-const emptyThirdForm = { name: "", parentId: "", subParentId: "", status: "Active", image: "", color: "#000000" };
+const emptySubForm = {
+  name: "",
+  parentId: "",
+  status: "Active",
+  image: "",
+  color: "#000000",
+};
+const emptyThirdForm = {
+  name: "",
+  parentId: "",
+  subParentId: "",
+  status: "Active",
+  image: "",
+  color: "#000000",
+};
 
 const SubCategoryPage = () => {
   const [allCategories, setAllCategories] = useState<Category[]>([]);
@@ -58,11 +93,17 @@ const SubCategoryPage = () => {
     }
   };
 
-  useEffect(() => { fetchCategories(); }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const level1 = allCategories.filter((c) => !c.parentId);
-  const level2 = allCategories.filter((c) => c.parentId && level1.some((p) => p._id === c.parentId));
-  const level3 = allCategories.filter((c) => c.parentId && level2.some((p) => p._id === c.parentId));
+  const level2 = allCategories.filter(
+    (c) => c.parentId && level1.some((p) => p._id === c.parentId),
+  );
+  const level3 = allCategories.filter(
+    (c) => c.parentId && level2.some((p) => p._id === c.parentId),
+  );
 
   // helper: build breadcrumb string for a category
   const getBreadcrumb = (cat: Category) => {
@@ -99,10 +140,23 @@ const SubCategoryPage = () => {
     setEditMode(isThird ? "third" : "sub");
     if (isThird) {
       const sub = level2.find((s) => s._id === cat.parentId);
-      setThirdForm({ name: cat.name, parentId: sub?.parentId || "", subParentId: cat.parentId || "", status: cat.status, image: cat.image, color: cat.color || "#000000" });
+      setThirdForm({
+        name: cat.name,
+        parentId: sub?.parentId || "",
+        subParentId: cat.parentId || "",
+        status: cat.status,
+        image: cat.image,
+        color: cat.color || "#000000",
+      });
       setThirdImgPreview(cat.image || "");
     } else {
-      setSubForm({ name: cat.name, parentId: cat.parentId || "", status: cat.status, image: cat.image, color: cat.color || "#000000" });
+      setSubForm({
+        name: cat.name,
+        parentId: cat.parentId || "",
+        status: cat.status,
+        image: cat.image,
+        color: cat.color || "#000000",
+      });
       setSubImgPreview(cat.image || "");
     }
     setModalOpen(true);
@@ -123,8 +177,12 @@ const SubCategoryPage = () => {
       if (subImgFile) imageUrl = await uploadImage(subImgFile);
       const parent = level1.find((p) => p._id === subForm.parentId);
       const payload: Record<string, unknown> = {
-        name: subForm.name, color: subForm.color, status: subForm.status,
-        image: imageUrl, parentId: subForm.parentId, parentCatName: parent?.name || "",
+        name: subForm.name,
+        color: subForm.color,
+        status: subForm.status,
+        image: imageUrl,
+        parentId: subForm.parentId,
+        parentCatName: parent?.name || "",
       };
       if (editItem && editMode === "sub") {
         await putData(`/api/category/${editItem._id}`, payload);
@@ -133,8 +191,11 @@ const SubCategoryPage = () => {
       }
       setModalOpen(false);
       fetchCategories();
-    } catch (err) { console.error(err); }
-    finally { setSubSaving(false); }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubSaving(false);
+    }
   };
 
   const handleThirdSave = async () => {
@@ -145,8 +206,12 @@ const SubCategoryPage = () => {
       if (thirdImgFile) imageUrl = await uploadImage(thirdImgFile);
       const sub = level2.find((s) => s._id === thirdForm.subParentId);
       const payload: Record<string, unknown> = {
-        name: thirdForm.name, color: thirdForm.color, status: thirdForm.status,
-        image: imageUrl, parentId: thirdForm.subParentId, parentCatName: sub?.name || "",
+        name: thirdForm.name,
+        color: thirdForm.color,
+        status: thirdForm.status,
+        image: imageUrl,
+        parentId: thirdForm.subParentId,
+        parentCatName: sub?.name || "",
       };
       if (editItem && editMode === "third") {
         await putData(`/api/category/${editItem._id}`, payload);
@@ -155,8 +220,11 @@ const SubCategoryPage = () => {
       }
       setModalOpen(false);
       fetchCategories();
-    } catch (err) { console.error(err); }
-    finally { setThirdSaving(false); }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setThirdSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -164,17 +232,30 @@ const SubCategoryPage = () => {
     try {
       await deleteData(`/api/category/${id}`);
       fetchCategories();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const inputCls = "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100";
+  const inputCls =
+    "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100";
   const labelCls = "mb-1 block text-xs font-medium text-gray-500";
 
   const ImageUploadField = ({
-    preview, onChange,
-  }: { preview: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => (
+    preview,
+    onChange,
+  }: {
+    preview: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  }) => (
     <div className="flex items-center gap-3 mb-1">
-      {preview && <img src={preview} alt="preview" className="h-10 w-10 rounded object-cover border" />}
+      {preview && (
+        <img
+          src={preview}
+          alt="preview"
+          className="h-10 w-10 rounded object-cover border"
+        />
+      )}
       <label className="cursor-pointer rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-1.5 text-xs text-gray-500 hover:border-blue-400 hover:text-blue-500 transition-colors">
         Upload Image
         <input type="file" accept="image/*" hidden onChange={onChange} />
@@ -185,64 +266,101 @@ const SubCategoryPage = () => {
   return (
     <div className="min-h-screen bg-[#f5f5f5] p-6">
       <div className="mb-4 flex items-center bg-white p-5 rounded-lg justify-between">
-        <Typography variant="h6" className="!font-bold !text-gray-800">Sub Category List</Typography>
-        <Button variant="contained" startIcon={<MdAdd />} onClick={openAddModal}
-          className="!bg-blue-600 !px-5 !py-2 !text-sm !font-semibold !shadow-none hover:!bg-blue-700">
+        <Typography variant="h6" className="!font-bold !text-gray-800">
+          Sub Category List
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
+          onClick={openAddModal}
+          className="!bg-blue-600 !px-5 !py-2 !text-sm !font-semibold !shadow-none hover:!bg-blue-700"
+        >
           Add Sub Category
         </Button>
       </div>
 
       {loading ? (
-        <Box className="flex justify-center py-16"><CircularProgress /></Box>
+        <Box className="flex justify-center py-16">
+          <CircularProgress />
+        </Box>
       ) : (
         <TableContainer component={Paper} className="!rounded-lg !shadow-sm">
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell className="!bg-white" padding="checkbox"><Checkbox size="small" /></TableCell>
+                <TableCell className="!bg-white" padding="checkbox">
+                  <Checkbox size="small" />
+                </TableCell>
                 <TableCell className="!bg-white !font-bold">IMAGE</TableCell>
                 <TableCell className="!bg-white !font-bold">NAME</TableCell>
                 <TableCell className="!bg-white !font-bold">LEVEL</TableCell>
-                <TableCell className="!bg-white !font-bold">BREADCRUMB</TableCell>
+                <TableCell className="!bg-white !font-bold">
+                  BREADCRUMB
+                </TableCell>
                 <TableCell className="!bg-white !font-bold">COLOR</TableCell>
                 <TableCell className="!bg-white !font-bold">STATUS</TableCell>
-                <TableCell className="!bg-white !font-bold" align="center">ACTION</TableCell>
+                <TableCell className="!bg-white !font-bold" align="center">
+                  ACTION
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {subCategories.map((cat) => (
                 <TableRow key={cat._id} hover>
-                  <TableCell padding="checkbox"><Checkbox size="small" /></TableCell>
+                  <TableCell padding="checkbox">
+                    <Checkbox size="small" />
+                  </TableCell>
                   <TableCell>
-                    <img src={cat.image} alt={cat.name} className="h-12 w-12 rounded object-cover" />
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="h-12 w-12 rounded object-cover"
+                    />
                   </TableCell>
                   <TableCell className="!font-medium">{cat.name}</TableCell>
                   <TableCell>
-                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                      getLevelLabel(cat) === "3rd Level"
-                        ? "bg-purple-100 text-purple-700"
-                        : "bg-blue-50 text-blue-700"
-                    }`}>
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                        getLevelLabel(cat) === "3rd Level"
+                          ? "bg-purple-100 text-purple-700"
+                          : "bg-blue-50 text-blue-700"
+                      }`}
+                    >
                       {getLevelLabel(cat)}
                     </span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-xs text-gray-600">{getBreadcrumb(cat)}</span>
+                    <span className="text-xs text-gray-600">
+                      {getBreadcrumb(cat)}
+                    </span>
                   </TableCell>
                   <TableCell>
                     <span className="inline-flex items-center gap-2">
-                      <span className="inline-block w-5 h-5 rounded-full border" style={{ background: cat.color }} />
+                      <span
+                        className="inline-block w-5 h-5 rounded-full border"
+                        style={{ background: cat.color }}
+                      />
                       <span className="text-xs text-gray-500">{cat.color}</span>
                     </span>
                   </TableCell>
                   <TableCell>
-                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}
+                    >
                       {cat.status}
                     </span>
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton size="small" onClick={() => openEdit(cat)}><MdEdit /></IconButton>
-                    <IconButton size="small" className="hover:!text-red-500" onClick={() => handleDelete(cat._id)}><MdDelete /></IconButton>
+                    <IconButton size="small" onClick={() => openEdit(cat)}>
+                      <MdEdit />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      className="hover:!text-red-500"
+                      onClick={() => handleDelete(cat._id)}
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -255,11 +373,12 @@ const SubCategoryPage = () => {
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl bg-[#f8f9fa]">
-
             {/* Header */}
             <div className="flex items-center gap-3 border-b border-gray-200 bg-[#f1f3f4] px-5 py-3.5">
-              <button onClick={() => setModalOpen(false)}
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm hover:text-red-500 transition-colors">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-500 shadow-sm hover:text-red-500 transition-colors"
+              >
                 <MdClose size={16} />
               </button>
               <h2 className="text-sm font-semibold text-gray-700">
@@ -269,10 +388,11 @@ const SubCategoryPage = () => {
 
             {/* Body — two columns */}
             <div className="grid grid-cols-2 gap-5 p-6">
-
               {/* ── Left: Add Sub Category ── */}
               <div className="rounded-lg bg-white p-5 shadow-sm border border-gray-100">
-                <p className="mb-4 text-sm font-bold text-gray-800">Add Sub Category</p>
+                <p className="mb-4 text-sm font-bold text-gray-800">
+                  Add Sub Category
+                </p>
 
                 <ImageUploadField
                   preview={subImgPreview}
@@ -290,10 +410,16 @@ const SubCategoryPage = () => {
                     <select
                       className={inputCls}
                       value={subForm.parentId}
-                      onChange={(e) => setSubForm({ ...subForm, parentId: e.target.value })}
+                      onChange={(e) =>
+                        setSubForm({ ...subForm, parentId: e.target.value })
+                      }
                     >
                       <option value="">Select...</option>
-                      {level1.map((p) => <option key={p._id} value={p._id}>{p.name}</option>)}
+                      {level1.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -302,7 +428,9 @@ const SubCategoryPage = () => {
                       className={inputCls}
                       placeholder="Enter name"
                       value={subForm.name}
-                      onChange={(e) => setSubForm({ ...subForm, name: e.target.value })}
+                      onChange={(e) =>
+                        setSubForm({ ...subForm, name: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -311,17 +439,33 @@ const SubCategoryPage = () => {
                   <div>
                     <label className={labelCls}>Color</label>
                     <div className="flex items-center gap-2">
-                      <input type="color" value={subForm.color}
-                        onChange={(e) => setSubForm({ ...subForm, color: e.target.value })}
-                        className="h-9 w-10 cursor-pointer rounded border border-gray-200" />
-                      <input className={inputCls} value={subForm.color} maxLength={7}
-                        onChange={(e) => setSubForm({ ...subForm, color: e.target.value })} />
+                      <input
+                        type="color"
+                        value={subForm.color}
+                        onChange={(e) =>
+                          setSubForm({ ...subForm, color: e.target.value })
+                        }
+                        className="h-9 w-10 cursor-pointer rounded border border-gray-200"
+                      />
+                      <input
+                        className={inputCls}
+                        value={subForm.color}
+                        maxLength={7}
+                        onChange={(e) =>
+                          setSubForm({ ...subForm, color: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
                   <div>
                     <label className={labelCls}>Status</label>
-                    <select className={inputCls} value={subForm.status}
-                      onChange={(e) => setSubForm({ ...subForm, status: e.target.value })}>
+                    <select
+                      className={inputCls}
+                      value={subForm.status}
+                      onChange={(e) =>
+                        setSubForm({ ...subForm, status: e.target.value })
+                      }
+                    >
                       <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                     </select>
@@ -330,16 +474,26 @@ const SubCategoryPage = () => {
 
                 <button
                   onClick={handleSubSave}
-                  disabled={subSaving || !subForm.parentId || !subForm.name.trim()}
+                  disabled={
+                    subSaving || !subForm.parentId || !subForm.name.trim()
+                  }
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                 >
-                  {subSaving ? <CircularProgress size={14} sx={{ color: "white" }} /> : <><MdCloudUpload size={16} /> Publish and View</>}
+                  {subSaving ? (
+                    <CircularProgress size={14} sx={{ color: "white" }} />
+                  ) : (
+                    <>
+                      <MdCloudUpload size={16} /> Publish and View
+                    </>
+                  )}
                 </button>
               </div>
 
               {/* ── Right: Add Third Level Category ── */}
               <div className="rounded-lg bg-white p-5 shadow-sm border border-gray-100">
-                <p className="mb-4 text-sm font-bold text-gray-800">Add Third Level Category</p>
+                <p className="mb-4 text-sm font-bold text-gray-800">
+                  Add Third Level Category
+                </p>
 
                 <ImageUploadField
                   preview={thirdImgPreview}
@@ -357,10 +511,20 @@ const SubCategoryPage = () => {
                     <select
                       className={inputCls}
                       value={thirdForm.parentId}
-                      onChange={(e) => setThirdForm({ ...thirdForm, parentId: e.target.value, subParentId: "" })}
+                      onChange={(e) =>
+                        setThirdForm({
+                          ...thirdForm,
+                          parentId: e.target.value,
+                          subParentId: "",
+                        })
+                      }
                     >
                       <option value="">Select...</option>
-                      {level1.map((p) => <option key={p._id} value={p._id}>{p.name}</option>)}
+                      {level1.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -368,11 +532,20 @@ const SubCategoryPage = () => {
                     <select
                       className={inputCls}
                       value={thirdForm.subParentId}
-                      onChange={(e) => setThirdForm({ ...thirdForm, subParentId: e.target.value })}
+                      onChange={(e) =>
+                        setThirdForm({
+                          ...thirdForm,
+                          subParentId: e.target.value,
+                        })
+                      }
                       disabled={!thirdForm.parentId}
                     >
                       <option value="">Select...</option>
-                      {filteredSubs.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
+                      {filteredSubs.map((s) => (
+                        <option key={s._id} value={s._id}>
+                          {s.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -384,13 +557,20 @@ const SubCategoryPage = () => {
                       className={inputCls}
                       placeholder="Enter name"
                       value={thirdForm.name}
-                      onChange={(e) => setThirdForm({ ...thirdForm, name: e.target.value })}
+                      onChange={(e) =>
+                        setThirdForm({ ...thirdForm, name: e.target.value })
+                      }
                     />
                   </div>
                   <div>
                     <label className={labelCls}>Status</label>
-                    <select className={inputCls} value={thirdForm.status}
-                      onChange={(e) => setThirdForm({ ...thirdForm, status: e.target.value })}>
+                    <select
+                      className={inputCls}
+                      value={thirdForm.status}
+                      onChange={(e) =>
+                        setThirdForm({ ...thirdForm, status: e.target.value })
+                      }
+                    >
                       <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                     </select>
@@ -401,24 +581,44 @@ const SubCategoryPage = () => {
                   <div>
                     <label className={labelCls}>Color</label>
                     <div className="flex items-center gap-2">
-                      <input type="color" value={thirdForm.color}
-                        onChange={(e) => setThirdForm({ ...thirdForm, color: e.target.value })}
-                        className="h-9 w-10 cursor-pointer rounded border border-gray-200" />
-                      <input className={inputCls} value={thirdForm.color} maxLength={7}
-                        onChange={(e) => setThirdForm({ ...thirdForm, color: e.target.value })} />
+                      <input
+                        type="color"
+                        value={thirdForm.color}
+                        onChange={(e) =>
+                          setThirdForm({ ...thirdForm, color: e.target.value })
+                        }
+                        className="h-9 w-10 cursor-pointer rounded border border-gray-200"
+                      />
+                      <input
+                        className={inputCls}
+                        value={thirdForm.color}
+                        maxLength={7}
+                        onChange={(e) =>
+                          setThirdForm({ ...thirdForm, color: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
                 </div>
 
                 <button
                   onClick={handleThirdSave}
-                  disabled={thirdSaving || !thirdForm.subParentId || !thirdForm.name.trim()}
+                  disabled={
+                    thirdSaving ||
+                    !thirdForm.subParentId ||
+                    !thirdForm.name.trim()
+                  }
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                 >
-                  {thirdSaving ? <CircularProgress size={14} sx={{ color: "white" }} /> : <><MdCloudUpload size={16} /> Publish and View</>}
+                  {thirdSaving ? (
+                    <CircularProgress size={14} sx={{ color: "white" }} />
+                  ) : (
+                    <>
+                      <MdCloudUpload size={16} /> Publish and View
+                    </>
+                  )}
                 </button>
               </div>
-
             </div>
           </div>
         </div>

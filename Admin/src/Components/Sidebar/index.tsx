@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.jpg";
-import { uploadData, getData } from "../../utils/api";
+import { getData } from "../../utils/api";
 
 import {
   MdDashboard,
@@ -19,7 +19,6 @@ import { MyContext } from "../../App";
 
 const Sidebar = () => {
   const { isSideBarOpen } = useContext(MyContext);
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [catOpen, setCatOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -32,19 +31,6 @@ const Sidebar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("adminAvatar");
     navigate("/login");
-  };
-
-  const onChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setAvatar(URL.createObjectURL(file));
-    const formData = new FormData();
-    formData.append("avatar", file);
-    try {
-      await uploadData("/api/user/upload-avatar", formData);
-    } catch {
-      console.log("Avatar upload failed");
-    }
   };
 
   return (
@@ -118,14 +104,24 @@ const Sidebar = () => {
               <MdCategory className="text-xl text-gray-500" />
               <span>Category</span>
             </span>
-            {catOpen ? <IoChevronUp className="text-gray-500" /> : <IoChevronDown className="text-gray-500" />}
+            {catOpen ? (
+              <IoChevronUp className="text-gray-500" />
+            ) : (
+              <IoChevronDown className="text-gray-500" />
+            )}
           </button>
           {catOpen && (
             <div className="ml-8 flex flex-col gap-1 mt-1">
-              <Link to="/category" className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600">
+              <Link
+                to="/category"
+                className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600"
+              >
                 Category
               </Link>
-              <Link to="/sub-category" className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600">
+              <Link
+                to="/sub-category"
+                className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600"
+              >
                 Sub Category
               </Link>
             </div>
@@ -151,7 +147,10 @@ const Sidebar = () => {
         </Link>
 
         {/* Logout */}
-        <button onClick={handleLogout} className="mt-5 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-50">
+        <button
+          onClick={handleLogout}
+          className="mt-5 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-50"
+        >
           <MdLogout className="text-xl" />
           <span>Logout</span>
         </button>

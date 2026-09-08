@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, CircularProgress, Skeleton } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -116,44 +116,70 @@ const Products = () => {
 
   useEffect(() => {
     getProducts();
-    getData("/api/category").then((res) => {
-      const raw: any[] = res.data || [];
-      setAllCats(raw.map((c) => ({
-        _id: c._id,
-        name: c.name,
-        parentId: c.parentId?._id ?? c.parentId ?? null,
-      })));
-    }).catch(() => {});
+    getData("/api/category")
+      .then((res) => {
+        const raw: any[] = res.data || [];
+        setAllCats(
+          raw.map((c) => ({
+            _id: c._id,
+            name: c.name,
+            parentId: c.parentId?._id ?? c.parentId ?? null,
+          })),
+        );
+      })
+      .catch(() => {});
   }, []);
 
   const level1 = allCats.filter((c) => !c.parentId);
-  const level2 = allCats.filter((c) => c.parentId && level1.some((p) => p._id === c.parentId));
-  const level3 = allCats.filter((c) => c.parentId && level2.some((p) => p._id === c.parentId));
+  const level2 = allCats.filter(
+    (c) => c.parentId && level1.some((p) => p._id === c.parentId),
+  );
+  const level3 = allCats.filter(
+    (c) => c.parentId && level2.some((p) => p._id === c.parentId),
+  );
 
-  const filteredLevel2 = selectedCategory === "All"
-    ? level2 : level2.filter((s) => s.parentId === selectedCategory);
+  const filteredLevel2 =
+    selectedCategory === "All"
+      ? level2
+      : level2.filter((s) => s.parentId === selectedCategory);
 
-  const filteredLevel3 = selectedSubCategory !== "All"
-    ? level3.filter((t) => t.parentId === selectedSubCategory)
-    : selectedCategory !== "All"
-      ? level3.filter((t) => filteredLevel2.some((s) => s._id === t.parentId))
-      : level3;
+  const filteredLevel3 =
+    selectedSubCategory !== "All"
+      ? level3.filter((t) => t.parentId === selectedSubCategory)
+      : selectedCategory !== "All"
+        ? level3.filter((t) => filteredLevel2.some((s) => s._id === t.parentId))
+        : level3;
 
-  const handleCheckboxChange = (_e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const handleCheckboxChange = (
+    _e: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+  ) => {
     const updated = productData.map((item) =>
-      item._id === id ? { ...item, checked: !item.checked } : item
+      item._id === id ? { ...item, checked: !item.checked } : item,
     );
     setProductData(updated);
-    setSortedIds(updated.filter((i) => i.checked).map((i) => i._id).sort((a, b) => a.localeCompare(b)));
+    setSortedIds(
+      updated
+        .filter((i) => i.checked)
+        .map((i) => i._id)
+        .sort((a, b) => a.localeCompare(b)),
+    );
   };
 
   const toggleSelectAll = () => {
     const allChecked = paginatedProducts.every((p) => p.checked);
     const updated = productData.map((item) =>
-      paginatedProducts.some((p) => p._id === item._id) ? { ...item, checked: !allChecked } : item
+      paginatedProducts.some((p) => p._id === item._id)
+        ? { ...item, checked: !allChecked }
+        : item,
     );
     setProductData(updated);
-    setSortedIds(updated.filter((i) => i.checked).map((i) => i._id).sort((a, b) => a.localeCompare(b)));
+    setSortedIds(
+      updated
+        .filter((i) => i.checked)
+        .map((i) => i._id)
+        .sort((a, b) => a.localeCompare(b)),
+    );
   };
 
   const handleCategoryChange = (e: SelectChangeEvent) => {
@@ -176,7 +202,8 @@ const Products = () => {
 
   const filteredProducts = productData.filter((p) => {
     const q = searchTerm.toLowerCase();
-    const matchesSearch = !q ||
+    const matchesSearch =
+      !q ||
       p.title.toLowerCase().includes(q) ||
       p.category.toLowerCase().includes(q) ||
       p.subCategory.toLowerCase().includes(q) ||
@@ -185,23 +212,30 @@ const Products = () => {
       p.size.toLowerCase().includes(q) ||
       p.weight.toLowerCase().includes(q);
 
-    const matchesCat = selectedCategory === "All" ||
+    const matchesCat =
+      selectedCategory === "All" ||
       level1.find((c) => c._id === selectedCategory)?.name === p.category;
-    const matchesSub = selectedSubCategory === "All" ||
+    const matchesSub =
+      selectedSubCategory === "All" ||
       level2.find((c) => c._id === selectedSubCategory)?.name === p.subCategory;
-    const matchesThird = selectedThirdCategory === "All" ||
-      level3.find((c) => c._id === selectedThirdCategory)?.name === p.thirdCatName;
+    const matchesThird =
+      selectedThirdCategory === "All" ||
+      level3.find((c) => c._id === selectedThirdCategory)?.name ===
+        p.thirdCatName;
 
     return matchesSearch && matchesCat && matchesSub && matchesThird;
   });
 
-  const paginatedProducts = filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const allSelectedOnPage = paginatedProducts.length > 0 && paginatedProducts.every((p) => p.checked);
+  const paginatedProducts = filteredProducts.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
+  const allSelectedOnPage =
+    paginatedProducts.length > 0 && paginatedProducts.every((p) => p.checked);
 
   return (
     <div>
       <div className="bg-white rounded-md border border-[rgba(0,0,0,0.1)] p-5 mb-5">
-
         {/* Header */}
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
           <h2 className="text-[20px] font-bold text-gray-900">Products</h2>
@@ -221,31 +255,65 @@ const Products = () => {
         <div className="flex flex-wrap gap-4 items-end justify-between mb-4">
           <div className="flex flex-wrap gap-4 items-end">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Category</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Category
+              </label>
               <FormControl size="small" className="!w-[160px]">
-                <Select value={selectedCategory} onChange={handleCategoryChange} className="!bg-white">
+                <Select
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  className="!bg-white"
+                >
                   <MenuItem value="All">All</MenuItem>
-                  {level1.map((c) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+                  {level1.map((c) => (
+                    <MenuItem key={c._id} value={c._id}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Sub-Category</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Sub-Category
+              </label>
               <FormControl size="small" className="!w-[160px]">
-                <Select value={selectedSubCategory} onChange={handleSubCategoryChange} className="!bg-white"
-                  disabled={selectedCategory !== "All" && filteredLevel2.length === 0}>
+                <Select
+                  value={selectedSubCategory}
+                  onChange={handleSubCategoryChange}
+                  className="!bg-white"
+                  disabled={
+                    selectedCategory !== "All" && filteredLevel2.length === 0
+                  }
+                >
                   <MenuItem value="All">All</MenuItem>
-                  {filteredLevel2.map((c) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+                  {filteredLevel2.map((c) => (
+                    <MenuItem key={c._id} value={c._id}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Third-Level</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Third-Level
+              </label>
               <FormControl size="small" className="!w-[160px]">
-                <Select value={selectedThirdCategory} onChange={handleThirdCategoryChange} className="!bg-white"
-                  disabled={selectedSubCategory !== "All" && filteredLevel3.length === 0}>
+                <Select
+                  value={selectedThirdCategory}
+                  onChange={handleThirdCategoryChange}
+                  className="!bg-white"
+                  disabled={
+                    selectedSubCategory !== "All" && filteredLevel3.length === 0
+                  }
+                >
                   <MenuItem value="All">All</MenuItem>
-                  {filteredLevel3.map((c) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+                  {filteredLevel3.map((c) => (
+                    <MenuItem key={c._id} value={c._id}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
@@ -254,28 +322,47 @@ const Products = () => {
           {/* Search */}
           <SearchBar
             value={searchTerm}
-            onChange={(v) => { setSearchTerm(v); setPage(0); }}
+            onChange={(v) => {
+              setSearchTerm(v);
+              setPage(0);
+            }}
             placeholder="Search products..."
             className="!w-[240px]"
           />
         </div>
 
         {sortedIds.length > 0 && (
-          <p className="text-xs text-blue-600 font-medium mb-2">{sortedIds.length} product(s) selected</p>
+          <p className="text-xs text-blue-600 font-medium mb-2">
+            {sortedIds.length} product(s) selected
+          </p>
         )}
 
-        <TableContainer component={Paper} sx={{ maxHeight: 520, boxShadow: "none", border: "1px solid rgba(0,0,0,0.08)" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: 520,
+            boxShadow: "none",
+            border: "1px solid rgba(0,0,0,0.08)",
+          }}
+        >
           <Table stickyHeader size="small" aria-label="products table">
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox" className="!bg-gray-50">
-                  <Checkbox size="small" checked={allSelectedOnPage}
+                  <Checkbox
+                    size="small"
+                    checked={allSelectedOnPage}
                     indeterminate={sortedIds.length > 0 && !allSelectedOnPage}
-                    onChange={toggleSelectAll} />
+                    onChange={toggleSelectAll}
+                  />
                 </TableCell>
                 {COLS.map((col) => (
-                  <TableCell key={col.label} align={col.align} style={{ minWidth: col.minWidth }}
-                    className="!bg-gray-50 !font-bold !text-gray-700 !text-xs !uppercase !tracking-wide">
+                  <TableCell
+                    key={col.label}
+                    align={col.align}
+                    style={{ minWidth: col.minWidth }}
+                    className="!bg-gray-50 !font-bold !text-gray-700 !text-xs !uppercase !tracking-wide"
+                  >
                     {col.label}
                   </TableCell>
                 ))}
@@ -286,10 +373,16 @@ const Products = () => {
               {productsLoading ? (
                 Array.from({ length: 6 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell padding="checkbox"><Skeleton variant="rectangular" width={18} height={18} /></TableCell>
+                    <TableCell padding="checkbox">
+                      <Skeleton variant="rectangular" width={18} height={18} />
+                    </TableCell>
                     {COLS.map((col) => (
                       <TableCell key={col.label}>
-                        <Skeleton variant="text" width={col.minWidth - 20} height={20} />
+                        <Skeleton
+                          variant="text"
+                          width={col.minWidth - 20}
+                          height={20}
+                        />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -297,27 +390,37 @@ const Products = () => {
               ) : paginatedProducts.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={COLS.length + 1} align="center">
-                    <span className="text-gray-400 py-8 block text-sm">No products found.</span>
+                    <span className="text-gray-400 py-8 block text-sm">
+                      No products found.
+                    </span>
                   </TableCell>
                 </TableRow>
               ) : (
                 paginatedProducts.map((product) => (
                   <TableRow hover key={product._id} selected={product.checked}>
                     <TableCell padding="checkbox">
-                      <Checkbox size="small" checked={product.checked}
-                        onChange={(e) => handleCheckboxChange(e, product._id)} />
+                      <Checkbox
+                        size="small"
+                        checked={product.checked}
+                        onChange={(e) => handleCheckboxChange(e, product._id)}
+                      />
                     </TableCell>
 
                     {/* Product */}
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <img src={product.image || tShirtImage} alt={product.title}
-                          className="w-10 h-10 rounded-md object-cover border flex-shrink-0" />
+                        <img
+                          src={product.image || tShirtImage}
+                          alt={product.title}
+                          className="w-10 h-10 rounded-md object-cover border flex-shrink-0"
+                        />
                         <div>
                           <p className="text-gray-800 font-medium text-[13px] leading-snug max-w-[220px] line-clamp-2">
                             {product.title}
                           </p>
-                          <span className="text-gray-400 text-[11px]">{product.tag}</span>
+                          <span className="text-gray-400 text-[11px]">
+                            {product.tag}
+                          </span>
                         </div>
                       </div>
                     </TableCell>
@@ -338,31 +441,47 @@ const Products = () => {
 
                     {/* 3rd Level */}
                     <TableCell>
-                      <span className="text-xs text-gray-600">{product.thirdCatName || "—"}</span>
+                      <span className="text-xs text-gray-600">
+                        {product.thirdCatName || "—"}
+                      </span>
                     </TableCell>
 
                     {/* Brand */}
-                    <TableCell><span className="text-xs text-gray-700">{product.brand}</span></TableCell>
+                    <TableCell>
+                      <span className="text-xs text-gray-700">
+                        {product.brand}
+                      </span>
+                    </TableCell>
 
                     {/* RAMS */}
                     <TableCell>
-                      <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-xs">{product.rams}</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-xs">
+                        {product.rams}
+                      </span>
                     </TableCell>
 
                     {/* Size */}
                     <TableCell>
-                      <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-xs">{product.size}</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-xs">
+                        {product.size}
+                      </span>
                     </TableCell>
 
                     {/* Weight */}
                     <TableCell>
-                      <span className="text-xs text-gray-600">{product.weight}</span>
+                      <span className="text-xs text-gray-600">
+                        {product.weight}
+                      </span>
                     </TableCell>
 
                     {/* Stock */}
                     <TableCell align="center">
-                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${product.countInStock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
-                        {product.countInStock > 0 ? product.countInStock : "Out"}
+                      <span
+                        className={`px-2 py-0.5 rounded text-xs font-semibold ${product.countInStock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}
+                      >
+                        {product.countInStock > 0
+                          ? product.countInStock
+                          : "Out"}
                       </span>
                     </TableCell>
 
@@ -370,20 +489,28 @@ const Products = () => {
                     <TableCell align="right">
                       <div className="flex flex-col items-end">
                         {product.oldPrice > product.newPrice && (
-                          <span className="text-gray-400 line-through text-[11px]">${product.oldPrice.toFixed(2)}</span>
+                          <span className="text-gray-400 line-through text-[11px]">
+                            ${product.oldPrice.toFixed(2)}
+                          </span>
                         )}
-                        <span className="text-[#3872fa] font-semibold text-[13px]">${product.newPrice.toFixed(2)}</span>
+                        <span className="text-[#3872fa] font-semibold text-[13px]">
+                          ${product.newPrice.toFixed(2)}
+                        </span>
                       </div>
                     </TableCell>
 
                     {/* Rating */}
                     <TableCell align="center">
-                      <span className="text-xs font-medium text-amber-600">★ {product.rating.toFixed(1)}</span>
+                      <span className="text-xs font-medium text-amber-600">
+                        ★ {product.rating.toFixed(1)}
+                      </span>
                     </TableCell>
 
                     {/* Featured */}
                     <TableCell align="center">
-                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${product.isFeatured ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                      <span
+                        className={`px-2 py-0.5 rounded text-xs font-semibold ${product.isFeatured ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}
+                      >
                         {product.isFeatured ? "Yes" : "No"}
                       </span>
                     </TableCell>
@@ -391,13 +518,25 @@ const Products = () => {
                     {/* Action */}
                     <TableCell align="right">
                       <div className="flex items-center justify-end gap-0.5">
-                        <IconButton size="small" title="Edit" className="!text-gray-500 hover:!text-[#3872fa]">
+                        <IconButton
+                          size="small"
+                          title="Edit"
+                          className="!text-gray-500 hover:!text-[#3872fa]"
+                        >
                           <FiEdit2 size={14} />
                         </IconButton>
-                        <IconButton size="small" title="View" className="!text-gray-500 hover:!text-[#3872fa]">
+                        <IconButton
+                          size="small"
+                          title="View"
+                          className="!text-gray-500 hover:!text-[#3872fa]"
+                        >
                           <FaRegEye size={14} />
                         </IconButton>
-                        <IconButton size="small" title="Delete" className="!text-gray-500 hover:!text-red-600">
+                        <IconButton
+                          size="small"
+                          title="Delete"
+                          className="!text-gray-500 hover:!text-red-600"
+                        >
                           <FaTrash size={14} />
                         </IconButton>
                       </div>
@@ -409,10 +548,19 @@ const Products = () => {
           </Table>
         </TableContainer>
 
-        <TablePagination component="div" count={filteredProducts.length} page={page}
-          onPageChange={(_e, p) => setPage(p)} rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e) => { setRowsPerPage(parseInt(e.target.value, 10)); setPage(0); }}
-          rowsPerPageOptions={[5, 10, 25]} className="!mt-2 !border-t !border-gray-100" />
+        <TablePagination
+          component="div"
+          count={filteredProducts.length}
+          page={page}
+          onPageChange={(_e, p) => setPage(p)}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value, 10));
+            setPage(0);
+          }}
+          rowsPerPageOptions={[5, 10, 25]}
+          className="!mt-2 !border-t !border-gray-100"
+        />
       </div>
     </div>
   );

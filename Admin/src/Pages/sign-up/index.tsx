@@ -17,7 +17,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { postData } from "../../utils/api";
 
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const [formFields, setFormFields] = useState({
@@ -261,9 +261,14 @@ const SignUp = () => {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             className="!bg-blue-600 !capitalize !text-[14px] !font-semibold !py-3 !rounded-md !shadow-none hover:!bg-blue-700"
           >
-            Create Account
+            {isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Create Account"
+            )}
           </Button>
 
           <Typography className="!text-center !text-[13px] !text-gray-500 !mt-4">

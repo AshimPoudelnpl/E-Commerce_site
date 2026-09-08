@@ -7,7 +7,7 @@ import Sidebar from "../Components/Sidebar";
 import Dashboard from "../Pages/Dashboard";
 import Products from "../Pages/Products";
 import AddProduct from "../Pages/AddProduct";
-import CategoryPage from "../Pages/Category";
+import CategoryPage from "../Pages/category";
 import SubCategoryPage from "../Pages/SubCategory";
 import User from "../Pages/Users/user";
 import Orders from "../Pages/Orders";
