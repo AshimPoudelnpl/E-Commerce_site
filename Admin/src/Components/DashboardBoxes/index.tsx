@@ -202,6 +202,7 @@ const columns: {
 ];
 
 const DashBoardBoxes = () => {
+  const userName = "Cameron";
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const [isOpenOrderedProduct, setIsOpenOrderedProduct] = useState<
     number | null
@@ -677,7 +678,8 @@ const DashBoardBoxes = () => {
               Sales Analytics & Performance
             </h2>
             <p className="text-xs text-gray-500">
-              Visual comparison of monthly orders, revenue, and product page conversions.
+              Visual comparison of monthly orders, revenue, and product page
+              conversions.
             </p>
           </div>
 
@@ -718,8 +720,17 @@ const DashBoardBoxes = () => {
               data={salesChartData}
               margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f2f5" vertical={false} />
-              <XAxis dataKey="name" stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#f0f2f5"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="name"
+                stroke="#9ca3af"
+                axisLine={false}
+                tickLine={false}
+              />
               <YAxis stroke="#9ca3af" axisLine={false} tickLine={false} />
               <Tooltip
                 cursor={{ fill: "#f9fafb" }}
@@ -750,7 +761,12 @@ const DashBoardBoxes = () => {
               margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="name" stroke="#9ca3af" axisLine={false} tickLine={false} />
+              <XAxis
+                dataKey="name"
+                stroke="#9ca3af"
+                axisLine={false}
+                tickLine={false}
+              />
               <YAxis stroke="#9ca3af" axisLine={false} tickLine={false} />
               <Tooltip
                 cursor={{ stroke: "#e5e7eb" }}
