@@ -1,4 +1,5 @@
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import type { FirebaseError } from "firebase/app";
 import { db } from "../firebase/config";
 import type { CartItem, UserType } from "../context/MyContext";
 
@@ -151,7 +152,7 @@ export const listenToUserCart = (
           }
         }
       },
-      (error) => {
+      (error: FirebaseError) => {
         console.warn("Real-time cart listener error:", error);
       },
     );
