@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MyContext, type CartItem, type MyContextType, type UserType } from "./context/MyContext";
+import {
+  MyContext,
+  type CartItem,
+  type MyContextType,
+  type UserType,
+} from "./context/MyContext";
 import { getData } from "./utils/api";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { auth } from "./firebase/config";
 import {
   saveCartToFirestore,
@@ -35,7 +40,12 @@ import Myaccount from "./pages/Myaccount";
 import Mylist from "./pages/Mylist";
 import Order from "./pages/Order";
 
-import { initialProducts, getStoredProducts, saveStoredProducts, type Product } from "./types/product";
+import {
+  initialProducts,
+  getStoredProducts,
+  saveStoredProducts,
+  type Product,
+} from "./types/product";
 import { initialCategories, type Category } from "./types/category";
 
 const alertBox = ({ msg, type }: { msg: string; type: string }) => {
@@ -48,7 +58,9 @@ const alertBox = ({ msg, type }: { msg: string; type: string }) => {
 
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
-  const [activeModalProduct, setActiveModalProduct] = useState<Product | null>(initialProducts[0]);
+  const [activeModalProduct, setActiveModalProduct] = useState<Product | null>(
+    initialProducts[0],
+  );
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
   const [fullWidth] = useState(true);
   const [openCartPanel, setCartOpen] = useState(false);
@@ -59,7 +71,9 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Product list state initialized from stored products
-  const [productList, setProductList] = useState<Product[]>(() => getStoredProducts());
+  const [productList, setProductList] = useState<Product[]>(() =>
+    getStoredProducts(),
+  );
 
   // Category list state initialized from initial categories
   const [categoriesList, setCategoriesList] = useState<Category[]>(() => {
@@ -97,29 +111,39 @@ function App() {
 
   const isRemoteUpdateRef = useRef(false);
   const [isCartSyncing, setIsCartSyncing] = useState(false);
-  const activeUserId = user?.uid || auth.currentUser?.uid || localStorage.getItem("userUid") || null;
+  const activeUserId =
+    user?.uid ||
+    auth.currentUser?.uid ||
+    localStorage.getItem("userUid") ||
+    null;
 
   // Firebase Auth real-time session tracking
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        localStorage.setItem("token", "firebase-token");
-        localStorage.setItem("userEmail", firebaseUser.email || "");
-        localStorage.setItem("userName", firebaseUser.displayName || "Google User");
-        localStorage.setItem("userUid", firebaseUser.uid);
-        if (firebaseUser.photoURL) {
-          localStorage.setItem("userAvatar", firebaseUser.photoURL);
+    const unsubscribeAuth = onAuthStateChanged(
+      auth,
+      (firebaseUser: FirebaseUser | null) => {
+        if (firebaseUser) {
+          localStorage.setItem("token", "firebase-token");
+          localStorage.setItem("userEmail", firebaseUser.email || "");
+          localStorage.setItem(
+            "userName",
+            firebaseUser.displayName || "Google User",
+          );
+          localStorage.setItem("userUid", firebaseUser.uid);
+          if (firebaseUser.photoURL) {
+            localStorage.setItem("userAvatar", firebaseUser.photoURL);
+          }
+          setUser((prev) => ({
+            ...prev,
+            uid: firebaseUser.uid,
+            name: firebaseUser.displayName || prev?.name || "Google User",
+            email: firebaseUser.email || prev?.email || "",
+            avatar: firebaseUser.photoURL || prev?.avatar || "",
+          }));
+          setIsLogin(true);
         }
-        setUser((prev) => ({
-          ...prev,
-          uid: firebaseUser.uid,
-          name: firebaseUser.displayName || prev?.name || "Google User",
-          email: firebaseUser.email || prev?.email || "",
-          avatar: firebaseUser.photoURL || prev?.avatar || "",
-        }));
-        setIsLogin(true);
-      }
-    });
+      },
+    );
 
     return () => unsubscribeAuth();
   }, []);
@@ -148,7 +172,11 @@ function App() {
           // If remote is empty, save local items to user profile in Firestore
           setCart((currentLocal) => {
             if (currentLocal.length > 0) {
-              saveCartToFirestore(activeUserId, currentLocal, user || undefined);
+              saveCartToFirestore(
+                activeUserId,
+                currentLocal,
+                user || undefined,
+              );
             }
             return currentLocal;
           });
@@ -238,7 +266,12 @@ function App() {
   }, [compareList]);
 
   // Cart helpers
-  const addToCart = (product: Product, quantity = 1, size?: string, color?: string) => {
+  const addToCart = (
+    product: Product,
+    quantity = 1,
+    size?: string,
+    color?: string,
+  ) => {
     const chosenSize = size || product.sizes?.[0] || "Standard";
     const chosenColor = color || product.colors?.[0] || "Standard";
     const cartItemId = `${product.id}-${chosenSize}-${chosenColor}`;
@@ -247,7 +280,9 @@ function App() {
       const existing = prev.find((item) => item.id === cartItemId);
       if (existing) {
         return prev.map((item) =>
-          item.id === cartItemId ? { ...item, quantity: item.quantity + quantity } : item
+          item.id === cartItemId
+            ? { ...item, quantity: item.quantity + quantity }
+            : item,
         );
       }
       return [
@@ -278,7 +313,9 @@ function App() {
       return;
     }
     setCart((prev) =>
-      prev.map((item) => (item.id === cartItemId ? { ...item, quantity } : item))
+      prev.map((item) =>
+        item.id === cartItemId ? { ...item, quantity } : item,
+      ),
     );
   };
 
@@ -341,23 +378,29 @@ function App() {
         });
         setIsLogin(true);
       }
-      getData("/api/user/user-details").then((res) => {
-        if (res?.success && res?.data) {
-          setUser((prev) => ({
-            ...res.data,
-            uid: prev?.uid || storedUid || res.data._id || undefined,
-          }));
-          setIsLogin(true);
-        }
-      }).catch(() => {
-        // Keeps the local user intact if backend API is not responding
-      });
+      getData("/api/user/user-details")
+        .then((res) => {
+          if (res?.success && res?.data) {
+            setUser((prev) => ({
+              ...res.data,
+              uid: prev?.uid || storedUid || res.data._id || undefined,
+            }));
+            setIsLogin(true);
+          }
+        })
+        .catch(() => {
+          // Keeps the local user intact if backend API is not responding
+        });
     }
 
     // Try to fetch categories from backend if available
     getData("/api/category")
       .then((res) => {
-        if (res?.categoryList && Array.isArray(res.categoryList) && res.categoryList.length > 0) {
+        if (
+          res?.categoryList &&
+          Array.isArray(res.categoryList) &&
+          res.categoryList.length > 0
+        ) {
           setCatData(res.categoryList);
         }
       })
@@ -436,15 +479,24 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/productDetails/:id" element={<ProductDetails />} />
           <Route path="/category/:categorySlug" element={<Productlisting />} />
-          <Route path="/category/:categorySlug/:subCategorySlug" element={<Productlisting />} />
+          <Route
+            path="/category/:categorySlug/:subCategorySlug"
+            element={<Productlisting />}
+          />
 
           {/* Direct Category Route Aliases */}
           <Route path="/fashion" element={<Productlisting />} />
           <Route path="/fashion/:subCategory" element={<Productlisting />} />
           <Route path="/electronics" element={<Productlisting />} />
-          <Route path="/electronics/:subCategory" element={<Productlisting />} />
+          <Route
+            path="/electronics/:subCategory"
+            element={<Productlisting />}
+          />
           <Route path="/home-kitchen" element={<Productlisting />} />
-          <Route path="/home-kitchen/:subCategory" element={<Productlisting />} />
+          <Route
+            path="/home-kitchen/:subCategory"
+            element={<Productlisting />}
+          />
           <Route path="/beauty" element={<Productlisting />} />
           <Route path="/beauty/:subCategory" element={<Productlisting />} />
           <Route path="/bags" element={<Productlisting />} />
@@ -495,11 +547,12 @@ function App() {
             <div className="w-full md:w-[42%] flex-shrink-0">
               <ProductZoom
                 images={
-                  activeModalProduct?.images && activeModalProduct.images.length > 0
+                  activeModalProduct?.images &&
+                  activeModalProduct.images.length > 0
                     ? activeModalProduct.images
                     : activeModalProduct?.img
-                    ? [activeModalProduct.img]
-                    : undefined
+                      ? [activeModalProduct.img]
+                      : undefined
                 }
               />
             </div>

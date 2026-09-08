@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { BsFillBagCheckFill } from "react-icons/bs";
-import { Button } from "@mui/material";
-import CartItems from "./CartItems";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
 import Mylistitems from "./Mylistitems";
 import AcccountSideaBar from "../components/AccountSideBar";
+import { MyContext } from "../context/MyContext";
 
 function Mylist() {
   const [activeSection, setActiveSection] = useState<
     "profile" | "password" | "address"
   >("profile");
+  const { products, wishlist, toggleWishlist, addToCart } =
+    useContext(MyContext);
+  const listProducts = wishlist.length > 0 ? wishlist : products.slice(0, 2);
 
   return (
     <section className="section py-5 min-h-screen">
@@ -25,8 +25,14 @@ function Mylist() {
               There are <span className="font-bold text-red-500">2</span>{" "}
               products in My list
             </p>
-            <Mylistitems size="S" qty={1} />
-            <Mylistitems size="M" qty={1} />
+            {listProducts.map((product) => (
+              <Mylistitems
+                key={product.id}
+                product={product}
+                onRemove={toggleWishlist}
+                onAddToCart={(item) => addToCart(item)}
+              />
+            ))}
           </div>
         </div>
       </div>
