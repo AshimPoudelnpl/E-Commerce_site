@@ -11,11 +11,14 @@ import { uploadData } from "../../utils/api";
 import { MyContext } from "../../context/MyContext";
 
 type SideBarProps = {
-  activeSection: "profile" | "password" | "address";
-  setActiveSection: (s: "profile" | "password" | "address") => void;
+  activeSection?: "profile" | "password" | "address";
+  setActiveSection?: (s: "profile" | "password" | "address") => void;
 };
 
-const AcccountSideaBar = ({ activeSection, setActiveSection }: SideBarProps) => {
+const AcccountSideaBar = ({
+  activeSection = "profile",
+  setActiveSection = () => undefined,
+}: SideBarProps) => {
   const context = useContext(MyContext);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -28,10 +31,16 @@ const AcccountSideaBar = ({ activeSection, setActiveSection }: SideBarProps) => 
     try {
       const res = await uploadData("/api/user/upload-avatar", formData);
       if (res?.success) {
-        context.alertBox({ type: "success", msg: "Avatar updated successfully!" });
+        context.alertBox({
+          type: "success",
+          msg: "Avatar updated successfully!",
+        });
         context.setUser(res.data);
       } else {
-        context.alertBox({ type: "error", msg: res?.message || "Failed to upload avatar" });
+        context.alertBox({
+          type: "error",
+          msg: res?.message || "Failed to upload avatar",
+        });
       }
     } catch {
       context.alertBox({ type: "error", msg: "Failed to upload avatar" });
@@ -60,7 +69,11 @@ const AcccountSideaBar = ({ activeSection, setActiveSection }: SideBarProps) => 
       <div className="flex flex-col items-center text-center py-5 px-4">
         <div className="relative group mb-3">
           <img
-            src={preview || context?.user?.avatar || "https://via.placeholder.com/100"}
+            src={
+              preview ||
+              context?.user?.avatar ||
+              "https://via.placeholder.com/100"
+            }
             alt="Profile"
             className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
           />
@@ -89,7 +102,9 @@ const AcccountSideaBar = ({ activeSection, setActiveSection }: SideBarProps) => 
         <h4 className="text-[15px] font-semibold text-gray-800">
           {context?.user?.name || "User"}
         </h4>
-        <span className="text-[13px] text-gray-500">{context?.user?.email || ""}</span>
+        <span className="text-[13px] text-gray-500">
+          {context?.user?.email || ""}
+        </span>
       </div>
 
       {/* Nav links — horizontal on mobile, vertical on md+ */}

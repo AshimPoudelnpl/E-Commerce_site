@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
@@ -12,10 +12,57 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ProductItems from "../components/ProductItems";
 import { products, type Product } from "../types/product";
 import Pagination from "@mui/material/Pagination";
+import { useSearchParams } from "react-router-dom";
 
 function Productlisting() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("sales-desc");
+  const [filters, setFilters] = useState({
+    categories: [] as string[],
+    rating: null as number | null,
+    priceRange: [100, 5000],
+  });
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get("search")?.toLowerCase() ?? "";
+
+  const visibleProducts = useMemo(() => {
+    const filteredProducts = products
+      .filter((product) =>
+        `${product.name} ${product.description ?? ""}`
+          .toLowerCase()
+          .includes(search),
+      )
+      .filter((product) => {
+        const category =
+          product.name.toLowerCase().includes("shoe") ||
+          product.name.toLowerCase().includes("sandal")
+            ? "Shoes"
+            : product.name.toLowerCase().includes("phone") ||
+                product.name.toLowerCase().includes("watch") ||
+                product.name.toLowerCase().includes("headphone")
+              ? "Electronics"
+              : product.name.toLowerCase().includes("bag")
+                ? "Bags"
+                : product.name.toLowerCase().includes("necklace")
+                  ? "Jewellery"
+                  : "Fashion";
+        return (
+          (!filters.categories.length ||
+            filters.categories.includes(category)) &&
+          (!filters.rating || product.rating >= filters.rating) &&
+          product.price >= filters.priceRange[0] &&
+          product.price <= filters.priceRange[1]
+        );
+      });
+
+    return [...filteredProducts].sort((first, second) => {
+      if (sortBy === "price-asc") return first.price - second.price;
+      if (sortBy === "price-desc") return second.price - first.price;
+      if (sortBy === "sales-asc") return first.rating - second.rating;
+      if (sortBy === "newest") return second.id - first.id;
+      return second.rating - first.rating;
+    });
+  }, [filters, search, sortBy]);
 
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortBy(event.target.value);
@@ -33,13 +80,13 @@ function Productlisting() {
           </Breadcrumbs>
         </div>
         <div className="bg-white p-3">
-          <div className="container flex gap-3">
-            <div className="sidebarWrapper w-[20%] h-full">
-              <Sidebar />
+          <div className="container flex flex-col lg:flex-row gap-3">
+            <div className="sidebarWrapper w-full lg:w-[20%] h-full">
+              <Sidebar onFilterChange={setFilters} />
             </div>
-            <div className="rightContent w-[80%]">
+            <div className="rightContent w-full lg:w-[80%]">
               {/* Toolbar */}
-              <div className="topStrip bg-[#f1f1f1] p-3 rounded-md flex items-center justify-between mb-4">
+              <div className="topStrip bg-[#f1f1f1] p-3 rounded-md flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <Button
                     className={`!min-w-[35px] !w-[35px] !h-[35px] !rounded-md ${
@@ -62,11 +109,15 @@ function Productlisting() {
                     <GridViewIcon className="!text-[18px]" />
                   </Button>
                   <span className="text-[14px] text-gray-700">
-                    There are {products.length} products.
+                    There are {visibleProducts.length} products
+                    {search
+                      ? ` matching "${searchParams.get("search") ?? ""}"`
+                      : ""}
+                    .
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <span className="text-[14px] text-gray-700 whitespace-nowrap">
                     Sort By
                   </span>
@@ -76,7 +127,7 @@ function Productlisting() {
                     size="small"
                     className="!bg-white"
                     sx={{
-                      minWidth: 220,
+                      minWidth: 160,
                       "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "#e5e7eb",
                       },
@@ -105,20 +156,21 @@ function Productlisting() {
                     : "flex flex-col gap-4"
                 }
               >
-                {products.map((product: Product) => (
+                {visibleProducts.map((product: Product) => (
                   <ProductItems key={product.id} {...product} view={viewMode} />
                 ))}
+                {!visibleProducts.length && (
+                  <p className="col-span-full py-12 text-center text-gray-500">
+                    No products found.
+                  </p>
+                )}
               </div>
               <div className="paginationWrapper mt-8 flex items-center justify-center">
-
                 <Pagination count={10} color="standard" />
-
               </div>
-
             </div>
           </div>
         </div>
-       
       </div>
     </section>
   );

@@ -35,11 +35,22 @@ function ProductItems({
 }: ProductItemsProps) {
   const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
   const context = useContext(MyContext);
+  const product = {
+    id,
+    img: img ?? "",
+    img2,
+    brand,
+    name,
+    description,
+    price,
+    oldPrice,
+    rating,
+  };
 
   if (view === "list") {
     return (
       <Link
-        to={`/product/${id}`}
+        to={`/productDetails/${id}`}
         className="productItems group flex items-stretch border border-[#e5e7eb] rounded-md overflow-hidden bg-white hover:shadow-md transition-all"
       >
         {/* Image — smaller on mobile */}
@@ -65,7 +76,12 @@ function ProductItems({
             {name}
             {description ? ` — ${description}` : ""}
           </h4>
-          <Rating value={rating} readOnly size="small" sx={{ color: "#f4a11e" }} />
+          <Rating
+            value={rating}
+            readOnly
+            size="small"
+            sx={{ color: "#f4a11e" }}
+          />
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <span className="text-[13px] line-through text-gray-400">
               RS {oldPrice.toFixed(2)}
@@ -76,7 +92,10 @@ function ProductItems({
           </div>
           <Button
             variant="contained"
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => {
+              e.preventDefault();
+              context.addToCart(product);
+            }}
             startIcon={<FaCartShopping />}
             className="!mt-2 sm:!mt-3 !bg-[#ff6347] hover:!bg-[#e5533d] !text-white !text-[12px] sm:!text-[13px] !normal-case !w-fit"
           >
@@ -89,7 +108,7 @@ function ProductItems({
 
   return (
     <Link
-      to={`/product/${id}`}
+      to={`/productDetails/${id}`}
       className="productItems group block border border-[#e5e7eb] rounded-md overflow-hidden bg-white hover:shadow-md transition-all relative"
     >
       <div className="imgWrapper overflow-hidden relative">
@@ -135,8 +154,14 @@ function ProductItems({
       <div className="h-[150px] sm:h-[180px] md:h-[200px]" />
 
       <div className="p-2 sm:p-3">
-        {brand && <span className="text-[11px] sm:text-[12px] text-gray-500">{brand}</span>}
-        <h4 className="text-[13px] sm:text-[14px] font-[500] text-[#1f2937] truncate">{name}</h4>
+        {brand && (
+          <span className="text-[11px] sm:text-[12px] text-gray-500">
+            {brand}
+          </span>
+        )}
+        <h4 className="text-[13px] sm:text-[14px] font-[500] text-[#1f2937] truncate">
+          {name}
+        </h4>
         {description && (
           <p className="text-[11px] sm:text-[12px] text-gray-500 mt-1 line-clamp-2">
             {description}
@@ -158,7 +183,10 @@ function ProductItems({
         />
         <Button
           variant="contained"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            context.addToCart(product);
+          }}
           startIcon={<FaCartShopping />}
           className="!mt-2 sm:!mt-3 !bg-[#ff6347] hover:!bg-[#e5533d] !text-white !text-[11px] sm:!text-[13px] !normal-case !w-full"
         >

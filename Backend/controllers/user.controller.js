@@ -212,6 +212,28 @@ export async function loginController(req, res) {
 
 export const loginUserController = loginController;
 
+export async function listUsersController(req, res) {
+  try {
+    const currentUser = await UserModel.findById(req.userId).select("role");
+    if (!currentUser || currentUser.role !== "ADMIN") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Admin access required" });
+    }
+
+    const users = await UserModel.find()
+      .select("name email mobile avatar status verify_email createdAt")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    console.error("List Users Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Unable to fetch users" });
+  }
+}
+
 // 4. Logout Controller
 export async function logoutController(req, res) {
   try {

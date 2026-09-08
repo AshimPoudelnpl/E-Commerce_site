@@ -11,6 +11,7 @@ import {
   resetpassword,
   refreshToken,
   userDetails,
+  listUsersController,
 } from "../controllers/user.controller.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
@@ -31,5 +32,6 @@ userRouter.post("/reset-password", resetpassword);
 userRouter.put("/reset-password", resetpassword);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails);
+userRouter.get("/users", auth, listUsersController);
 
 export default userRouter;
