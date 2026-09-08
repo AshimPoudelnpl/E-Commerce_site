@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -17,7 +17,6 @@
     "@mui/styled-engine-sc": "^9.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "axios": "^1.20.0",
-    "firebase": "^12.18.0",
     "react": "^19.2.8",
     "react-collapse": "^5.1.1",
     "react-dom": "^19.2.8",
@@ -46,7 +45,6 @@
     "vite": "^8.2.0"
   },
   "optionalDependencies": {
-    "@rolldown/binding-linux-x64-gnu": "^1.2.7",
-    "lightningcss-linux-x64-gnu": "^1.32.0"
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.3.3"
   }
 }
